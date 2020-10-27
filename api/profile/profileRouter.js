@@ -3,18 +3,6 @@ const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
 const router = express.Router();
 
-/* 
-  QUICK NOTE ABOUT THIS FILE:
-  
-  File is straight up starter code at the moment, profiles were not implemented, with main 
-  focus being on connecting data science and frontend together through our backend. 
-
-  Also swagger stuff is for Route documentation, leaving it here as a guide if you want to 
-  change/add any of the endpoint documentation.
-
-
-*/
-
 /**
  * @swagger
  * components:

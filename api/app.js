@@ -1,4 +1,4 @@
-const createError = require('http-errors');
+const createError = require('http-errors')
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -9,11 +9,13 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const jsdocConfig = require('../config/jsdoc');
 const dotenv = require('dotenv');
 const config_result = dotenv.config();
+const cron = require('node-cron');
+const axios = require('axios')
+
 if (process.env.NODE_ENV != 'production' && config_result.error) {
   throw config_result.error;
 }
 
-// swagger stuff from starter code, you can keep it if you'd like. We didn't really use it, though.
 const swaggerSpec = swaggerJSDoc(jsdocConfig);
 const swaggerUIOptions = {
   explorer: true,
@@ -23,7 +25,12 @@ const swaggerUIOptions = {
 const indexRouter = require('./index/indexRouter');
 const profileRouter = require('./profile/profileRouter');
 const dsRouter = require('./dsService/dsRouter');
-const incidentsRouter = require('./incidentsService/incidentsRouter');
+const incidentsRouter = require('./incidents/incidentsRouter');
+const incidentsModel = require('./incidents/incidentsModel');
+
+//###[ Models ]###
+const incidentModel = require('./incidents/incidentsModel');
+const { dsFetch } = require('./dsService/dsUtil');
 
 const app = express();
 
@@ -31,7 +38,6 @@ process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
   // application specific logging, throwing an error, or other logic here
 });
-
 // docs would need to be built and committed
 app.use(
   '/api-docs',
@@ -81,6 +87,11 @@ app.use(function (err, req, res, next) {
     return res.json(errObject);
   }
   next(err);
+});
+
+// cron job to retrieve data from DS API
+cron.schedule('* * 12 * *', () => {
+  dsFetch()
 });
 
 module.exports = app;

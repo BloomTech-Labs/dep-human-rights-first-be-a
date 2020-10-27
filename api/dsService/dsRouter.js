@@ -2,9 +2,64 @@ const express = require('express');
 const router = express.Router();
 const dsModel = require('./dsModel');
 const authRequired = require('../middleware/authRequired');
-const Incidents = require('../incidentsService/incidentsModel');
 
-// Part of Starter Code, Not Connected to anything yet.
+/**
+ * @swagger
+ * /data/predict/{x1}/{x2}/{x3}:
+ *  get:
+ *    description: Get prediction for 3 inputs
+ *    summary: Returns a prediction result
+ *    security:
+ *      - okta: []
+ *    tags:
+ *      - data
+ *    parameters:
+ *      - x1:
+ *        name: x1
+ *        in: path
+ *        description: a positive number
+ *        required: true
+ *        example: 3.14
+ *        schema:
+ *          type: number
+ *      - x2:
+ *        name: x2
+ *        in: path
+ *        description: a number
+ *        required: true
+ *        example: -42
+ *        schema:
+ *          type: number
+ *      - x3:
+ *        name: x3
+ *        in: path
+ *        description: label for prediction
+ *        required: true
+ *        example: banjo
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: A predition result object
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                prediction:
+ *                  type: boolean
+ *                  description: is prediction true or false
+ *                probability:
+ *                  type: number
+ *                  description: the probability between 0 and 1
+ *              example:
+ *                prediction: true
+ *                probability: 0.9479960541387882
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      500:
+ *        description: 'Error making prediction'
+ */
 router.get('/predict/:x1/:x2/:3', authRequired, function (req, res) {
   const x1 = String(req.params.x1);
   const x2 = String(req.params.x2);
@@ -21,66 +76,43 @@ router.get('/predict/:x1/:x2/:3', authRequired, function (req, res) {
     });
 });
 
-// This function gets data from DS and populates tables with their data
-router.get('/populate', function (req, res) {
+/**
+ * @swagger
+ * /data/viz/{state}:
+ *  get:
+ *    description: plotly vizualization data
+ *    summary: Returns a plotly data
+ *    security:
+ *      - okta: []
+ *    tags:
+ *      - data
+ *    parameters:
+ *      - state:
+ *        name: state
+ *        in: path
+ *        description: get viz data for state
+ *        required: true
+ *        example: UT
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: A plotly result object. See [DS service](https://ds-bw-test.herokuapp.com/#/default/viz_viz__statecode__get) for detailed docs.
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      500:
+ *        description: 'Error making prediction'
+ */
+router.get('/viz/:state', authRequired, function (req, res) {
+  const state = String(req.params.state);
+
   dsModel
-    .getData()
+    .getViz(state)
     .then((response) => {
-      // Parsing the data we get from data science (it comes in as a string initially, this makes it a JSON Object)
-      const incidentsArray = JSON.parse(response.data);
-
-      // First map to add Incidents
-      const incidentsMap = incidentsArray.map((incident) => ({
-        id: incident.id,
-        state: incident.state,
-        city: incident.city,
-        date: incident.date,
-        title: incident.title,
-        description: incident.description,
-        lat: incident.geocoding.lat,
-        long: incident.geocoding.long,
-      }));
-
-      // Second map to add sources for incidents
-      const linksMap = incidentsArray.map((incident) => {
-        const linkArray = incident.links.map((link) => ({
-          incident_id: incident.id,
-          link: link,
-        }));
-        return linkArray;
-      });
-
-      // Adding Incidents only (no sources yet)
-      Incidents.addIncidents(incidentsMap)
-        .then(() => {
-          // Adding sources
-          Incidents.addSources(linksMap.flat()).then(() => {
-            res
-              .status(201)
-              .json({ message: 'Incidents and sources inserted :D' });
-          });
-        })
-        .catch((error) => {
-          res
-            .status(500)
-            .json({ message: 'add incidents failed', error: error });
-        });
+      res.status(200).json(response.data);
     })
     .catch((error) => {
-      res.status(500).json({ message: error, error_found: true });
-    });
-});
-
-// This route was made simply to quickly get data from data science and see what they were sending. (doesn't populate, just shows data)
-router.get('/proxy', function (req, res) {
-  dsModel
-    .getData()
-    .then((response) => {
-      let info = JSON.parse(response.data);
-
-      res.status(200).json(info);
-    })
-    .catch((error) => {
+      console.error(error);
       res.status(500).json(error);
     });
 });

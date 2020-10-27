@@ -4,10 +4,6 @@ const oktaVerifierConfig = require('../../config/okta');
 const Profiles = require('../profile/profileModel');
 const oktaJwtVerifier = new OktaJwtVerifier(oktaVerifierConfig.config);
 
-/*
-  STARTERCODE for profiles, already built out but not implemented.
-*/
-
 const lookupProfile = async (id) => {
   return await Profiles.findById(id).then((profile) => {
     return profile;

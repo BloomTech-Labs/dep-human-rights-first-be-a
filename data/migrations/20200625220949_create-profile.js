@@ -1,39 +1,37 @@
-/* 
-Have yet to implement incident type because this was all the data we were 
-given for the time being. You'll probably want to make a seperate table for
-types (id, type). Then an incident_type table, that has incident_id and type_id.
-*/
-
-exports.up = (knex) => {
+exports.up = function (knex) {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
-    .createTable('profiles', (table) => {
-      table.string('id').notNullable().unique().primary();
-      table.string('email');
-      table.string('name');
-      table.string('avatarUrl');
-      table.timestamps(true, true);
+    .createTable('incidents', (incidents) => {
+      incidents.increments('incident_id');
+      incidents.string('id').unique().notNullable();
+      incidents.string('city').notNullable();
+      incidents.string('state').notNullable();
+      incidents.float('lat').notNullable();
+      incidents.float('long').notNullable();
+      incidents.string('title').notNullable();
+      incidents.varchar('desc', [1000]);
+      incidents.date('date');
     })
-    .createTable('incidents', (table) => {
-      table.string('id').notNullable().unique().primary();
-      table.string('state');
-      table.string('city');
-      table.string('date').notNullable();
-      table.string('title', 1000).notNullable();
-      table.string('description', 10000);
-      table.float('lat').notNullable();
-      table.float('long').notNullable();
+    .createTable('sources', (sources) => {
+      sources.increments('src_id').notNullable().unique().primary();
+      sources.integer('incident_id');
+      sources.string('src_url');
+      sources.string('src_type');
     })
-    .createTable('sources', (table) => {
-      table.increments();
-      table.string('incident_id').references('incidents.id').notNullable();
-      table.string('link', 1000).notNullable();
+    .createTable('incident_type_of_force', (incident_type_of_force) => {
+      incident_type_of_force.increments('itof_id');
+      incident_type_of_force.integer('type_of_force_id').notNullable().unique();
+      incident_type_of_force.integer('incident_id').notNullable().unique();
+    })
+    .createTable('type_of_force', (type_of_force) => {
+      type_of_force.increments('type_of_force_id');
+      type_of_force.string('type_of_force');
     });
 };
-
-exports.down = (knex) => {
+exports.down = function (knex) {
   return knex.schema
-    .dropTableIfExists('sources')
     .dropTableIfExists('incidents')
-    .dropTableIfExists('profiles');
+    .dropTableIfExists('sources')
+    .dropTableIfExists('incident_type_of_force')
+    .dropTableIfExists('type_of_force');
 };

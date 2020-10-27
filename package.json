@@ -6,6 +6,7 @@
   "repository": "github:Lambda-School-Labs/labs-api-starter",
   "scripts": {
     "start": "node server.js",
+    "server": "nodemon server.js",
     "watch:dev": "nodemon",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint --fix .",
@@ -44,12 +45,13 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
-    "express": "~4.16.1",
+    "express": "^4.16.4",
     "faker": "^4.1.0",
     "helmet": "^3.23.1",
     "http-errors": "~1.6.3",
-    "knex": "^0.21.1",
+    "knex": "^0.21.6",
     "morgan": "~1.9.1",
+    "node-cron": "^2.0.3",
     "pg": "^8.2.1",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
