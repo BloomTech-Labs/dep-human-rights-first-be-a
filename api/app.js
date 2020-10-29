@@ -1,4 +1,4 @@
-const createError = require('http-errors')
+const createError = require('http-errors');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -10,7 +10,7 @@ const jsdocConfig = require('../config/jsdoc');
 const dotenv = require('dotenv');
 const config_result = dotenv.config();
 const cron = require('node-cron');
-const axios = require('axios')
+const axios = require('axios');
 
 if (process.env.NODE_ENV != 'production' && config_result.error) {
   throw config_result.error;
@@ -26,7 +26,6 @@ const indexRouter = require('./index/indexRouter');
 const profileRouter = require('./profile/profileRouter');
 const dsRouter = require('./dsService/dsRouter');
 const incidentsRouter = require('./incidents/incidentsRouter');
-const incidentsModel = require('./incidents/incidentsModel');
 
 //###[ Models ]###
 const incidentModel = require('./incidents/incidentsModel');
@@ -91,7 +90,7 @@ app.use(function (err, req, res, next) {
 
 // cron job to retrieve data from DS API
 cron.schedule('* * 12 * *', () => {
-  dsFetch()
+  dsFetch();
 });
 
 module.exports = app;
