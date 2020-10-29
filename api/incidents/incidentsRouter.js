@@ -110,15 +110,15 @@ router.get('/showallincidents', async (req, res) => {
 /**
  * @swagger
  * /createincidents:
- *  get:
- *    description: root path returning status
+ *  post:
+ *    description: Add an instance to the database
  *    tags:
  *      - incidents
  *    produces:
  *      - applicaiton/json
  *    responses:
- *      200:
- *        description: status is up
+ *      201:
+ *        description: incident created
  *        content:
  *          application/json:
  *            schema:
@@ -127,8 +127,20 @@ router.get('/showallincidents', async (req, res) => {
  *                - api
  *              properties:
  *                api:
- *                  type: boolean
- *                  example: true
+ *                  type: object
+ *                  example: { message: 'Success!' }
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {"message": "Error creating Record"}
  */
 router.post('/createincidents', validateIncidents, (req, res) => {
   req.body.forEach((incident) => {
