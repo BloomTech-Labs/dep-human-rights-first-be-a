@@ -156,15 +156,74 @@ router.post('/createincidents', validateIncidents, (req, res) => {
 });
 
 // ###Sources Routes###
+/**
+ * @swagger
+ * /sources:
+ *  get:
+ *    description: Get all sources from the database
+ *    tags:
+ *      - sources
+ *    produces:
+ *      - applicaiton/json
+ *    responses:
+ *      200:
+ *        description: return all sources from database
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: [{incident_id: 123askdj, src_url: someurl@twitter.com, src_type: 'tweet'}]
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {"err": "Error get Sources"}
+ */
 router.get('/sources', (req, res) => {
   Incidents.getAllSources()
     .then((response) => {
-      res.status(201).json(response);
+      res.status(200).json(response);
     })
     .catch((err) => {
       res.status(500).json(err);
     });
 });
+
+/**
+ * @swagger
+ * /sources/:id:
+ *  get:
+ *    description: Gets all sources associated with a given incident ID
+ *    tags:
+ *      - sources
+ *    produces:
+ *      - applicaiton/json
+ *    responses:
+ *      200:
+ *        description: get all sources associated with a given incident ID
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - api
+ *              properties:
+ *                api:
+ *                  type: array
+ *                  example: [{incident_id: 123askdj, src_url: someurl@twitter.com, src_type: 'tweet'}, {incident_id: 123askdj, src_url: someurl@reddit.com, src_type: 'news article'}]
+ */
 
 // returns all sources associated with incident ID provided
 router.get('/sources/:id', (req, res) => {
@@ -174,6 +233,41 @@ router.get('/sources/:id', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /createsource:
+ *  get:
+ *    description: Create a source
+ *    tags:
+ *      - sources
+ *    produces:
+ *      - applicaiton/json
+ *    responses:
+ *      201:
+ *        description: return all sources from database
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {src_id: 3}
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {"error": "Error creating Source"}
+ */
 router.post('/createsource', (req, res) => {
   Incidents.createSingleSource(req.body)
     .then((response) => {
@@ -185,6 +279,41 @@ router.post('/createsource', (req, res) => {
 });
 
 // ###Types of Force (tags) Routes###
+/**
+ * @swagger
+ * /tags:
+ *  get:
+ *    description: Get all types of force from the database
+ *    tags:
+ *      - types_of_force
+ *    produces:
+ *      - applicaiton/json
+ *    responses:
+ *      200:
+ *        description: return all types of force from database
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - api
+ *              properties:
+ *                api:
+ *                  type: array
+ *                  example: [{type_of_force_id: 3, type_of_force: taser }]
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {"err": "Error get Types of Force"}
+ */
 router.get('/tags', (req, res) => {
   Incidents.getAllTags()
     .then((response) => {
@@ -194,7 +323,40 @@ router.get('/tags', (req, res) => {
       res.status(500).json(err);
     });
 });
-
+/**
+ * @swagger
+ * /tagtypes:
+ *  get:
+ *    description: Get all types of force for a particular incident from the database
+ *    tags:
+ *      - types_of_force
+ *    produces:
+ *      - applicaiton/json
+ *    responses:
+ *      200:
+ *        description: return all types of force for a particular incident from database
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - api
+ *              properties:
+ *                api:
+ *                  type: array
+ *                  example: [{itof_id: 3, type_of_force_id: 3, incident_id: 23}]
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                  type: object
+ *                  example: {"err": "Error get Types of Force for incident id"}
+ */
 router.get('/tagtypes', (req, res) => {
   Incidents.getAllTagTypes()
     .then((response) => {
@@ -206,6 +368,41 @@ router.get('/tagtypes', (req, res) => {
 });
 
 // ###Utility Routes###
+/**
+ * @swagger
+ * /cleardb:
+ *  get:
+ *    description: Deletes the contents in the database
+ *    tags:
+ *      - utility
+ *    produces:
+ *      - applicaiton/json
+ *    responses:
+ *      200:
+ *        description: deletes all the contents in the database
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {message: 'All database contents have been deleted'}
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {"error": "Error to delete all contents from database"}
+ */
 router.delete('/cleardb', (req, res) => {
   Incidents.deleteDB()
     .then((response) => {
@@ -216,6 +413,41 @@ router.delete('/cleardb', (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /fetchfromds:
+ *  get:
+ *    description: Gets data from DS team
+ *    tags:
+ *      - utility
+ *    produces:
+ *      - applicaiton/json
+ *    responses:
+ *      200:
+ *        description: gets data from DS team
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                - api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {message: 'complete'}
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {"err": "Error get data from DS"}
+ */
 router.post('/fetchfromds', (req, res) => {
   axios
     .get(process.env.DS_API_URL)
@@ -226,7 +458,7 @@ router.post('/fetchfromds', (req, res) => {
       res.json({ message: 'complete' });
     })
     .catch((err) => {
-      res.json(error);
+      res.json(err);
     });
 });
 
