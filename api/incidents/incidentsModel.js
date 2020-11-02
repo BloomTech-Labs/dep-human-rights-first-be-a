@@ -8,7 +8,7 @@ module.exports = {
   getAllTagTypes,
   getSourcesById,
   createSingleSource,
-  deleteDB
+  deleteDB,
 };
 
 async function getAllIncidents() {
@@ -91,8 +91,8 @@ async function createSingleSource(source) {
 }
 
 async function deleteDB() {
-  await db('incident_type_of_force').del()
-  await db('type_of_force').del()
-  await db('sources').del()
-  return await db('incidents').del()
+  await db('incident_type_of_force').del();
+  await db('type_of_force').del();
+  await db('sources').del();
+  return await db('incidents').del();
 }
