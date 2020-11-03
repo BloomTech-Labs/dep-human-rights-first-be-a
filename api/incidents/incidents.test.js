@@ -93,17 +93,35 @@ describe('incidentsModel', () => {
   });
 
   describe('createIncident(incident)', () => {
-    it('adds new incident to empty db', async () => {
+    it('adds new incident to empty db and returns success message', async () => {
       let incidents = getTestIncidents();
       let incident = incidents[0];
       incident.src = ['Twitter'];
       incident.tags = ['hard, projectiles'];
 
-      await Incidents.createIncident(incident);
-
+      const add = await Incidents.createIncident(incident);
       const dbIncidents = await db('incidents');
 
       expect(dbIncidents).toHaveLength(1);
+      expect(add).toEqual({ message: 'Success!' });
+    });
+
+    it('adds new incident to populated db and returns success message', async () => {
+      let incidents = getTestIncidents();
+      const incidentList = [incidents[0], incidents[1], incidents[2]];
+
+      asyncForEach(incidentList, async (incident) => {
+        await db('incidents').insert(incident);
+      });
+
+      let incident = incidents[3];
+      incident.src = ['Twitter'];
+      incident.tags = ['hard, projectiles'];
+      const add = await Incidents.createIncident(incident);
+
+      const dbIncidents = await db('incidents');
+      expect(dbIncidents).toHaveLength(4);
+      expect(add).toEqual({ message: 'Success!' });
     });
   });
 });
