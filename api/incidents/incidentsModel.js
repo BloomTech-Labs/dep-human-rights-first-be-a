@@ -30,6 +30,7 @@ async function createIncident(incident) {
     desc: incident.desc,
     date: incident.date,
   };
+
   const incidentID = await db('incidents').insert(newIncident, 'incident_id');
   await createSource(incident.src, incidentID[0]);
   await createTags(incident.tags, incidentID[0]);

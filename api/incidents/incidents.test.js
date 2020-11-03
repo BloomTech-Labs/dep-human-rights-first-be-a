@@ -91,4 +91,19 @@ describe('incidentsModel', () => {
       expect(dbIncidents).toHaveLength(4);
     });
   });
+
+  describe('createIncident(incident)', () => {
+    it('adds new incident to empty db', async () => {
+      let incidents = getTestIncidents();
+      let incident = incidents[0];
+      incident.src = ['Twitter'];
+      incident.tags = ['hard, projectiles'];
+
+      await Incidents.createIncident(incident);
+
+      const dbIncidents = await db('incidents');
+
+      expect(dbIncidents).toHaveLength(1);
+    });
+  });
 });
