@@ -1,14 +1,14 @@
-const axios = require('axios')
+const axios = require('axios');
 
 // model imports
-const incidentsModel = require('../incidents/incidentsModel')
+const incidentsModel = require('../incidents/incidentsModel');
 
 module.exports = {
-    dsFetch
-}
+  dsFetch,
+};
 
 function dsFetch() {
-    return axios
+  return axios
     .get(process.env.DS_API_URL)
     .then((response) => {
       response.data.forEach((element) => {
@@ -16,6 +16,6 @@ function dsFetch() {
       });
     })
     .catch((err) => {
-      console.log('Server Error');
+      console.log(err);
     });
 }

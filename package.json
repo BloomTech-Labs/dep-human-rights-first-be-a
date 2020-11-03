@@ -13,6 +13,7 @@
     "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
     "knex": "npx knex --knexfile config/knexfile.js",
     "tests": "npx jest --forceExit",
+    "test": "cross-env DB_ENV=testing jest --watch --runInBand",
     "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
   },
   "jest": {
@@ -50,6 +51,7 @@
     "helmet": "^3.23.1",
     "http-errors": "~1.6.3",
     "knex": "^0.21.6",
+    "knex-cleaner": "^1.3.1",
     "morgan": "~1.9.1",
     "node-cron": "^2.0.3",
     "pg": "^8.2.1",
