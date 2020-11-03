@@ -4,7 +4,7 @@ const axios = require('axios');
 
 // Model and util imports
 const Incidents = require('./incidentsModel');
-const { post } = require('../dsService/dsRouter');
+// const { post } = require('../dsService/dsRouter');
 const { validateIncidents } = require('./middleware/index');
 
 // ###Incidents Routes###
@@ -150,6 +150,7 @@ router.post('/createincidents', validateIncidents, (req, res) => {
         res.status(201).json(post);
       })
       .catch((err) => {
+        console.log(err);
         res.status(500).json({ message: 'Error creating Record' });
       });
   });
@@ -406,6 +407,7 @@ router.get('/tagtypes', (req, res) => {
 router.delete('/cleardb', (req, res) => {
   Incidents.deleteDB()
     .then((response) => {
+      console.log(response);
       res.json({ message: 'All database contents have been deleted' });
     })
     .catch((error) => {
