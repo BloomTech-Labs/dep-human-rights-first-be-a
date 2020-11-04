@@ -111,4 +111,20 @@ describe('tagsModel', () => {
       expect(dbTags).toEqual(expectedTags);
     });
   });
+
+  describe('getAllTags()', () => {
+    it('gets all tags from the tag table', async () => {
+      let tags = getTags();
+
+      await asyncForEach(tags, async (tag) => {
+        await db('type_of_force').insert(tag);
+      });
+
+      const dbTags = await db('type_of_force');
+      const modelTags = await Tags.getAllTags();
+
+      expect(modelTags).toHaveLength(4);
+      expect(modelTags).toEqual(dbTags);
+    });
+  });
 });
