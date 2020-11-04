@@ -92,4 +92,72 @@ describe('sourcesModel', () => {
       expect(sourcesFromModel).toEqual(dbSources);
     });
   });
+
+  describe('getSourcesByIncidentId(incident_id)', () => {
+    it('gets single source for a particular incident id', async () => {
+      let sources = getSources();
+      let src = sources[0];
+
+      await db('sources').insert(src);
+
+      const source = await Sources.getSourcesByIncidentId(1);
+      const dbSource = await db('sources');
+
+      expect(source).toHaveLength(1);
+      expect(source).toEqual(dbSource);
+    });
+    it('gets multiple sources with the same incident id', async () => {
+      let sources = getSources();
+
+      //populates source table so it's a non-empty table
+      await asyncForEach(sources, async (source) => {
+        await db('sources').insert(source);
+      });
+
+      //check that getting sources pertaining a particular incident based on incident id
+      const incident1sources = await Sources.getSourcesByIncidentId(1);
+      const incident2sources = await Sources.getSourcesByIncidentId(2);
+
+      //checks that the array we are getting back has only 1 incident id related to the particular call
+      expect(incident1sources).toHaveLength(2);
+      incident1sources.forEach((source) => {
+        expect(source.incident_id).toBe(1);
+      });
+
+      expect(incident2sources).toHaveLength(2);
+      incident2sources.forEach((source) => {
+        expect(source.incident_id).toBe(2);
+      });
+    });
+  });
+
+  describe('createSource(sources, incidentID)', () => {
+    it('adds a source to an empty source table', async () => {
+      let sources = getSources();
+      let source1 = {
+        src_url: sources[0].src_url,
+        src_type: sources[0].src_type,
+      };
+      await Sources.createSource([source1], 1);
+
+      const dbSources = await db('sources');
+      expect(dbSources).toHaveLength(1);
+    });
+
+    it('adds a source to a non-empty source table', async () => {
+      let sources = getSources();
+      let sourceList = [sources[0], sources[1], sources[2]];
+
+      await asyncForEach(sourceList, async (source) => {
+        await db('sources').insert(source);
+      });
+
+      let src = { src_url: sources[3].src_url, src_type: sources[3].src_type };
+
+      await Sources.createSource([src], 2);
+
+      const dbSources = await db('sources');
+      expect(dbSources).toHaveLength(4);
+    });
+  });
 });
