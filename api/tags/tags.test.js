@@ -74,7 +74,7 @@ describe('tagsModel', () => {
   });
 
   describe('createTags(tags, incidentID)', () => {
-    it('creates a tag in an empty tag table', async () => {
+    it('creates a tag in an empty type_of_force table', async () => {
       let tags = getTags();
       let tag = tags[0]['type_of_force'];
 
@@ -87,6 +87,28 @@ describe('tagsModel', () => {
         type_of_force: 'projectile',
         incident_id: 1,
       });
+    });
+
+    it('creates a tag in a non-empty type_of_force table', async () => {
+      const expectedTags = [
+        { incident_id: 1, type_of_force: 'projectile', type_of_force_id: 1 },
+        { incident_id: 1, type_of_force: 'hard', type_of_force_id: 2 },
+        { incident_id: 2, type_of_force: 'presence', type_of_force_id: 3 },
+        { incident_id: 2, type_of_force: 'other', type_of_force_id: 4 },
+      ];
+      let tags = getTags();
+      const tagList = [tags[0], tags[1], tags[2]];
+
+      await asyncForEach(tagList, async (tag) => {
+        await db('type_of_force').insert(tag);
+      });
+
+      let tagToInsert = tags[3]['type_of_force'];
+      await Tags.createTags([tagToInsert], 2);
+
+      const dbTags = await db('type_of_force');
+      expect(dbTags).toHaveLength(4);
+      expect(dbTags).toEqual(expectedTags);
     });
   });
 });
