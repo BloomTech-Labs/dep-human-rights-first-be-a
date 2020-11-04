@@ -20,7 +20,7 @@ async function asyncForEach(array, cb) {
 }
 
 describe('sourcesModel', () => {
-  //wipes all tables in database clean so each test starts with empty tables
+  //wipes all tables in database clean so each test starts with empty tables and adds test data in to the incident and type of force tables
   beforeEach(async () => {
     //db is the knex initialized object using db.raw to truncate postgres tables with foreign keys
     //can use knex.raw but it is global and deprecated
