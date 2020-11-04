@@ -14,7 +14,7 @@ module.exports = {
     useNullAsDefault: true,
   },
 
-  testing: {
+  test: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: { directory: '../data/migrations' },
@@ -35,6 +35,5 @@ module.exports = {
       min: 2,
       max: 10,
     },
-    useNullAsDefault: true,
   },
 };

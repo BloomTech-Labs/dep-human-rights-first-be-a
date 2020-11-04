@@ -1,6 +1,4 @@
 /* eslint-disable */
-const { internet } = require('faker');
-const { ExpectationFailed } = require('http-errors');
 const db = require('../../data/db-config');
 const Incidents = require('./incidentsModel');
 
@@ -67,10 +65,6 @@ describe('incidentsModel', () => {
     //can use knex.raw but it is global and deprecated
     await db.raw('TRUNCATE TABLE incidents RESTART IDENTITY CASCADE');
     await db.raw('TRUNCATE TABLE sources RESTART IDENTITY CASCADE');
-    await db.raw(
-      'TRUNCATE TABLE incident_type_of_force RESTART IDENTITY CASCADE'
-    );
-
     await db.raw('TRUNCATE TABLE type_of_force RESTART IDENTITY CASCADE');
   });
 
@@ -97,7 +91,7 @@ describe('incidentsModel', () => {
       let incidents = getTestIncidents();
       let incident = incidents[0];
       incident.src = ['Twitter'];
-      incident.tags = ['hard, projectiles'];
+      incident.tags = ['hard', 'projectiles'];
 
       const add = await Incidents.createIncident(incident);
       const dbIncidents = await db('incidents');
@@ -116,7 +110,7 @@ describe('incidentsModel', () => {
 
       let incident = incidents[3];
       incident.src = ['Twitter'];
-      incident.tags = ['hard, projectiles'];
+      incident.tags = ['hard', 'projectiles'];
       const add = await Incidents.createIncident(incident);
 
       const dbIncidents = await db('incidents');
