@@ -104,7 +104,7 @@ describe('incidentsModel', () => {
       let incidents = getTestIncidents();
       const incidentList = [incidents[0], incidents[1], incidents[2]];
 
-      asyncForEach(incidentList, async (incident) => {
+      await asyncForEach(incidentList, async (incident) => {
         await db('incidents').insert(incident);
       });
 

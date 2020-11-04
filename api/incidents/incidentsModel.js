@@ -1,21 +1,15 @@
 const db = require('../../data/db-config');
+const Sources = require('../sources/sourcesModel');
 
 module.exports = {
   getAllIncidents,
   createIncident,
-  getAllSources,
   getAllTags,
-  getSourcesById,
-  createSingleSource,
   deleteDB,
 };
 
 async function getAllIncidents() {
   return await db('incidents');
-}
-
-async function getSourcesById(incident_id) {
-  return await db('sources').where('incident_id', incident_id);
 }
 
 async function createIncident(incident) {
@@ -31,7 +25,7 @@ async function createIncident(incident) {
   };
 
   const incidentID = await db('incidents').insert(newIncident, 'incident_id');
-  await createSource(incident.src, incidentID[0]);
+  await Sources.createSource(incident.src, incidentID[0]);
   await createTags(incident.tags, incidentID[0]);
   return { message: 'Success!' };
 }
@@ -42,30 +36,12 @@ async function createTags(tags, incidentID) {
   });
 }
 
-async function createSource(sources, incidentID) {
-  await sources.forEach(async (sourceURL) => {
-    const source = {
-      incident_id: incidentID,
-      src_url: sourceURL,
-    };
-    await db('sources').insert(source);
-  });
-}
-
 async function createTypeOfForce(tof) {
   await db('type_of_force').insert(tof);
 }
 
-function getAllSources() {
-  return db('sources');
-}
-
 function getAllTags() {
   return db('type_of_force');
-}
-
-async function createSingleSource(source) {
-  return await db('sources').insert(source, 'src_id');
 }
 
 async function deleteDB() {
