@@ -13,10 +13,19 @@
     "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
     "knex": "npx knex --knexfile config/knexfile.js",
     "tests": "npx jest --forceExit",
-    "test": "cross-env DB_ENV=testing jest --watch --runInBand"
+    "test": "cross-env DB_ENV=testing jest --watch --runInBand",
+    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "**/*.js",
+      "!**/node_modules/**",
+      "!**/vendor/**",
+      "!**/__tests__/**",
+      "!**/coverage/**",
+      "!**/apidoc/**"
+    ]
   },
   "nodemonConfig": {
     "exec": "npm run start",
