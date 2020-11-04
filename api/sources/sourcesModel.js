@@ -2,9 +2,8 @@ const db = require('../../data/db-config');
 
 module.exports = {
   getAllSources,
-  createSource,
   getSourcesByIncidentId,
-  createSingleSource,
+  createSource,
 };
 
 async function getSourcesByIncidentId(incident_id) {
@@ -24,8 +23,4 @@ async function createSource(sources, incidentID) {
 
 function getAllSources() {
   return db('sources');
-}
-
-async function createSingleSource(source) {
-  return await db('sources').insert(source, 'src_id');
 }
