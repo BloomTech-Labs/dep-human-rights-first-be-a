@@ -21,6 +21,7 @@ exports.up = function (knex) {
     .createTable('type_of_force', (type_of_force) => {
       type_of_force.increments('type_of_force_id');
       type_of_force.string('type_of_force');
+      type_of_force.integer('incident_id');
     });
 };
 exports.down = function (knex) {

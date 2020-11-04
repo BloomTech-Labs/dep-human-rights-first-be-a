@@ -9,19 +9,19 @@ module.exports = {
     seeds: { directory: '../data/seeds' },
     pool: {
       min: 2,
-      max: 10,
+      max: 100,
     },
     useNullAsDefault: true,
   },
 
-  testing: {
+  test: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
     migrations: { directory: '../data/migrations' },
     seeds: { directory: '../data/seeds' },
     pool: {
       min: 2,
-      max: 10,
+      max: 100,
     },
     useNullAsDefault: true,
   },
@@ -31,10 +31,5 @@ module.exports = {
     connection: process.env.DATABASE_URL,
     migrations: { directory: '../data/migrations' },
     seeds: { directory: '../data/seeds' },
-    pool: {
-      min: 2,
-      max: 10,
-    },
-    useNullAsDefault: true,
   },
 };
