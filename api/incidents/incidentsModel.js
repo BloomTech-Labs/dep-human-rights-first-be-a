@@ -1,10 +1,10 @@
 const db = require('../../data/db-config');
 const Sources = require('../sources/sourcesModel');
+const Tags = require('../tags/tagsModel');
 
 module.exports = {
   getAllIncidents,
   createIncident,
-  getAllTags,
   deleteDB,
 };
 
@@ -26,22 +26,8 @@ async function createIncident(incident) {
 
   const incidentID = await db('incidents').insert(newIncident, 'incident_id');
   await Sources.createSource(incident.src, incidentID[0]);
-  await createTags(incident.tags, incidentID[0]);
+  await Tags.createTags(incident.tags, incidentID[0]);
   return { message: 'Success!' };
-}
-
-async function createTags(tags, incidentID) {
-  await tags.forEach(async (tag) => {
-    await createTypeOfForce({ type_of_force: tag, incident_id: incidentID });
-  });
-}
-
-async function createTypeOfForce(tof) {
-  await db('type_of_force').insert(tof);
-}
-
-function getAllTags() {
-  return db('type_of_force');
 }
 
 async function deleteDB() {
