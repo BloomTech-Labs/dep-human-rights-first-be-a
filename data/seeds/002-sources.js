@@ -5,7 +5,7 @@ exports.seed = function (knex) {
     .then(function () {
       // Inserts seed entries
       return knex('sources').insert([
-        { incident_id: 1, src_url: 'poopy', src_type: 'ecks dee' },
+        { incident_id: 1, src_url: 'url1', src_type: 'post' },
       ]);
     });
 };
