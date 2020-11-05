@@ -138,8 +138,8 @@ router.post('/createincidents', validateIncidents, (req, res) => {
   req.body.forEach((incident) => {
     Incidents.createIncident(incident)
 
-      .then((post) => {
-        res.status(201).json(post);
+      .then((success) => {
+        res.status(201).json(success);
       })
       .catch((err) => {
         console.log(err);
