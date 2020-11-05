@@ -24,22 +24,19 @@ Our team is developing an interactive map that identifies instances of police us
 
 ### Key Features
 
-- User can view incidents of police brutality and get more information on specific incidents
-- User can seearch map based on type of force, location, and date 
+- User can view incidents of police use of force and get more information on specific incidents
+- User can search map based on type of force, location, and date 
 
 ## 1️⃣ Tech Stack
 
 ### Data Science API built using:
+- Fast API
 
-#### _Data Science goes here_
-
-🚫 Why did you choose this framework?
-
-- Works well with FastAPI
+Why did you choose this framework?
 - Recommended to us
 - Wanted to learn an in-demand framework
 
-🚫List the rest of the data science features and libraries in the same format as the framework above.
+List the rest of the data science features and libraries in the same format as the framework above.
 
 - Pandas
 - scikit-learn
@@ -50,9 +47,10 @@ Our team is developing an interactive map that identifies instances of police us
 
 #### Data Science API deployed to AWS
 
-#### [Back end](🚫link to back end repo here) built using:
+#### [Back end](https://github.com/Lambda-School-Labs/human-rights-first-be-a) built using:
+- Postgres SQL
+- Knex
 
-#### 🚫 back end framework goes here (link to BE REPO)
 ### dependencies
     @okta/jwt-verifier: ^1.0.0
     axios: ^0.19.2
@@ -76,7 +74,7 @@ Our team is developing an interactive map that identifies instances of police us
 | Name        | Type       | Required | Description                                          |
 | ----------- | ---------- | -------- | ---------------------------------------------------- |
 | incident_id | increments | Yes      | records the number of the entreys                    |
-| id          | String     | Yes      | gives it unque id                                    |
+| id          | String     | Yes      | gives it unque id to match from DS data              |
 | city        | String     | Yes      | gives the city the incident took place               |
 | state       | String     | Yes      | gives the state the incident took place              |
 | lat         | float      | Yes      | gives the latitude of the incident on the world map  |
