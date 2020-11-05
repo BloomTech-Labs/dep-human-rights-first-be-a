@@ -185,7 +185,7 @@ router.post('/createincidents', validateIncidents, (req, res) => {
  *                  example: {"err": "Error get Sources"}
  */
 router.get('/sources', (req, res) => {
-  Incidents.getAllSources()
+  Sources.getAllSources()
     .then((response) => {
       res.status(200).json(response);
     })
@@ -221,7 +221,7 @@ router.get('/sources', (req, res) => {
 // returns all sources associated with incident ID provided
 router.get('/sources/:id', (req, res) => {
   const { id } = req.params;
-  Incidents.getSourcesById(id).then((response) => {
+  Sources.getSourcesByIncidentId(id).then((response) => {
     res.json(response);
   });
 });

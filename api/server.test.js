@@ -206,5 +206,56 @@ describe('server', () => {
         expect(res.status).toBe(500);
       });
     });
+    describe('GET /sources', () => {
+      it('returns 200 OK', async () => {
+        const res = await supertest(server).get('/incidents/sources');
+        expect(res.status).toBe(200);
+      });
+
+      it('returns list of all sources in database', async () => {
+        const res = await supertest(server).get('/incidents/sources');
+
+        const sources = [
+          { src_id: 1, incident_id: 1, src_url: 'url1', src_type: 'post' },
+          { src_id: 2, incident_id: 1, src_url: 'url2', src_type: 'video' },
+          { src_id: 3, incident_id: 2, src_url: 'url3', src_type: 'article' },
+        ];
+
+        expect(res.body).toEqual(sources);
+      });
+    });
+    describe('GET /sources/:incidentID', () => {
+      it('returns 200 OK', async () => {
+        const res = await supertest(server).get('/incidents/sources/2');
+        expect(res.status).toBe(200);
+      });
+
+      it('returns a list of sources for the given incident id in the url', async () => {
+        const src1 = [
+          { src_id: 1, incident_id: 1, src_url: 'url1', src_type: 'post' },
+          { src_id: 2, incident_id: 1, src_url: 'url2', src_type: 'video' },
+        ];
+
+        const src2 = [
+          { src_id: 3, incident_id: 2, src_url: 'url3', src_type: 'article' },
+        ];
+
+        const res = await supertest(server).get('/incidents/sources/1');
+        expect(res.body).toEqual(src1);
+
+        const res2 = await supertest(server).get('/incidents/sources/2');
+        expect(res2.body).toEqual(src2);
+      });
+
+      it('returns empty array when given incident id that does not exist in database', async () => {
+        const res = await supertest(server).get('/incidents/sources/5');
+        expect(res.body).toHaveLength(0);
+      });
+
+      it('returns 200 OK when given incident id that does not exist in database', async () => {
+        const res = await supertest(server).get('/incidents/sources/5');
+        expect(res.status).toBe(200);
+      });
+    });
   });
 });
