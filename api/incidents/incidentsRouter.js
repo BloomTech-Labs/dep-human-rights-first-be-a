@@ -366,53 +366,6 @@ router.get('/tags/:incidentID', (req, res) => {
     });
 });
 
-// ###Utility Routes###
-/**
- * @swagger
- * /cleardb:
- *  get:
- *    description: Deletes the contents in the database
- *    tags:
- *      - utility
- *    produces:
- *      - applicaiton/json
- *    responses:
- *      200:
- *        description: deletes all the contents in the database
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - api
- *              properties:
- *                api:
- *                  type: object
- *                  example: {message: 'All database contents have been deleted'}
- *      500:
- *        description: server error
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                -api
- *              properties:
- *                api:
- *                  type: object
- *                  example: {"error": "Error to delete all contents from database"}
- */
-router.delete('/cleardb', (req, res) => {
-  Incidents.deleteDB()
-    .then((response) => {
-      console.log(response);
-      res.json({ message: 'All database contents have been deleted' });
-    })
-    .catch((error) => {
-      res.json(error);
-    });
-});
-
 /**
  * @swagger
  * /fetchfromds:
