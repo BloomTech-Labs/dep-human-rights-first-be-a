@@ -357,7 +357,7 @@ router.get('/tags', (req, res) => {
  *                  example: {"err": "Error get Types of Force for incident id"}
  */
 router.get('/tags/:incidentID', (req, res) => {
-  Tags.getAllTagTypes()
+  Tags.getTagsByIncidentId(req.params.incidentID)
     .then((response) => {
       res.status(200).json(response);
     })

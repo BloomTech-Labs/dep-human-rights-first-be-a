@@ -108,7 +108,7 @@ describe('server', () => {
       src_url: 'url3',
       src_type: 'article',
     });
-  });
+  }); //end beforeEach
 
   describe('GET / for indexRouter', () => {
     it('returns 200 OK', async () => {
@@ -120,7 +120,7 @@ describe('server', () => {
       const res = await supertest(server).get('/');
       expect(res.body).toEqual({ api: 'Hello World' });
     });
-  });
+  }); //end get / for indexRouter
 
   describe('/incidentsRouter', () => {
     describe('GET /showallincidents', () => {
@@ -134,7 +134,7 @@ describe('server', () => {
         const res = await supertest(server).get('/incidents/showallincidents');
         expect(res.status).toBe(200);
       });
-    });
+    }); //end get /showallincidents
 
     describe('POST /createincidents', () => {
       it('returns 201 when adding a new incident', async () => {
@@ -205,7 +205,8 @@ describe('server', () => {
 
         expect(res.status).toBe(500);
       });
-    });
+    }); //end post /createincidents
+
     describe('GET /sources', () => {
       it('returns 200 OK', async () => {
         const res = await supertest(server).get('/incidents/sources');
@@ -223,7 +224,8 @@ describe('server', () => {
 
         expect(res.body).toEqual(sources);
       });
-    });
+    }); //end get /sources
+
     describe('GET /sources/:incidentID', () => {
       it('returns 200 OK', async () => {
         const res = await supertest(server).get('/incidents/sources/2');
@@ -256,7 +258,7 @@ describe('server', () => {
         const res = await supertest(server).get('/incidents/sources/5');
         expect(res.status).toBe(200);
       });
-    });
+    }); //end sources/inicidentID
 
     describe('POST /createsource ', () => {
       it('adds a source to the database', async () => {
@@ -311,7 +313,7 @@ describe('server', () => {
           .send();
         expect(res.status).toBe(400);
       });
-    });
+    }); //end post /createsource
 
     describe('GET /tags', () => {
       it('sends 200 OK when retrieving tags', async () => {
@@ -332,6 +334,39 @@ describe('server', () => {
       });
     }); //end get /tags describe
 
-    describe('GET /tags/:incidentID', () => {}); //end get /tags/:incidentID
+    describe('GET /tags/:incidentID', () => {
+      it('returns 200 OK when returning tags for a particular incident', async () => {
+        const res = await supertest(server).get('/incidents/tags/1');
+
+        expect(res.status).toBe(200);
+      });
+
+      it('returns list of all tags for a particular incident id in the url', async () => {
+        const expected = [
+          {
+            type_of_force_id: 1,
+            type_of_force: 'projectiles',
+            incident_id: 1,
+          },
+        ];
+
+        const res = await supertest(server).get('/incidents/tags/1');
+
+        expect(res.body).toEqual(expected);
+      });
+
+      it('returns empty array when trying to get tags for an incident that does not exist in database', async () => {
+        const res = await supertest(server).get('/incidents/tags/5');
+
+        expect(res.body).toEqual([]);
+        expect(res.body).toHaveLength(0);
+      });
+
+      it('returns 200 OK when trying to get tags for an incident that does not exist in database', async () => {
+        const res = await supertest(server).get('/incidents/tags/5');
+
+        expect(res.status).toBe(200);
+      });
+    }); //end get /tags/:incidentID
   }); //end /incidents Router
 }); //end server

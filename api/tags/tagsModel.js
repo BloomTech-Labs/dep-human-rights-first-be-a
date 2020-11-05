@@ -20,6 +20,6 @@ function getAllTags() {
   return db('type_of_force');
 }
 
-function getTagsByIncidentId(incident_id) {
+async function getTagsByIncidentId(incident_id) {
   return db('type_of_force').where({ incident_id });
 }
