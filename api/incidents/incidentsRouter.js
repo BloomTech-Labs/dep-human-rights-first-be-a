@@ -4,6 +4,8 @@ const axios = require('axios');
 
 // Model and util imports
 const Incidents = require('./incidentsModel');
+const Sources = require('../sources/sourcesModel');
+const Tags = require('../tags/tagsModel');
 // const { post } = require('../dsService/dsRouter');
 const { validateIncidents } = require('./middleware/index');
 
@@ -66,24 +68,14 @@ const { validateIncidents } = require('./middleware/index');
 router.get('/showallincidents', async (req, res) => {
   try {
     const incidents = await Incidents.getAllIncidents();
-    const sources = await Incidents.getAllSources();
-    const tofTypes = await Incidents.getAllTags();
-    const typeLinks = await Incidents.getAllTagTypes();
+    const sources = await Sources.getAllSources();
+    const tofTypes = await Tags.getAllTags();
 
     const responseArray = [];
-    const tagsArray = [];
-
-    tofTypes.forEach((tof) => {
-      typeLinks.forEach((connection) => {
-        if (connection.type_of_force_id === tof.type_of_force_id) {
-          tagsArray.push({ ...tof, incident_id: connection.incident_id });
-        }
-      });
-    });
 
     incidents.forEach((incident) => {
       incident['categories'] = [];
-      tagsArray.forEach((tag) => {
+      tofTypes.forEach((tag) => {
         if (tag.incident_id === incident.incident_id) {
           incident.categories.push(tag.type_of_force);
         }
@@ -103,7 +95,7 @@ router.get('/showallincidents', async (req, res) => {
     });
     res.json(responseArray);
   } catch (e) {
-    res.status(500).json({ message: 'Request Error' });
+    res.status(500).json({ message: 'Request Error', error: e });
   }
 });
 
