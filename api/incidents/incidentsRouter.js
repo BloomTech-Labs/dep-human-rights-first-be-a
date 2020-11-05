@@ -7,7 +7,7 @@ const Incidents = require('./incidentsModel');
 const Sources = require('../sources/sourcesModel');
 const Tags = require('../tags/tagsModel');
 // const { post } = require('../dsService/dsRouter');
-const { validateIncidents } = require('./middleware/index');
+const Middleware = require('./middleware/index');
 
 // ###Incidents Routes###
 
@@ -134,7 +134,7 @@ router.get('/showallincidents', async (req, res) => {
  *                  type: object
  *                  example: {"message": "Error creating Record"}
  */
-router.post('/createincidents', validateIncidents, (req, res) => {
+router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
   req.body.forEach((incident) => {
     Incidents.createIncident(incident)
 
@@ -229,7 +229,7 @@ router.get('/sources/:id', (req, res) => {
 /**
  * @swagger
  * /createsource:
- *  get:
+ *  post:
  *    description: Create a source
  *    tags:
  *      - sources
@@ -261,10 +261,16 @@ router.get('/sources/:id', (req, res) => {
  *                  type: object
  *                  example: {"error": "Error creating Source"}
  */
-router.post('/createsource', (req, res) => {
-  Incidents.createSingleSource(req.body)
-    .then((response) => {
-      res.json(response);
+router.post('/createsource', Middleware.validateSource, (req, res) => {
+  //destructures request body so can be sent to the model function with the appropiate values
+  const incident_id = req.body.incident_id;
+  let src = {};
+  src.src_url = req.body.src_url;
+  src.src_type = req.body.src_type;
+
+  Sources.createSource([src], incident_id)
+    .then(() => {
+      res.status(201).json({ message: 'Success!' });
     })
     .catch((error) => {
       res.status(500).json(error);

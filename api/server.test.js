@@ -257,5 +257,62 @@ describe('server', () => {
         expect(res.status).toBe(200);
       });
     });
-  });
-});
+
+    describe('POST /createsource ', () => {
+      it('adds a source to the database', async () => {
+        let src = { incident_id: 2, src_url: 'url4', src_type: 'article' };
+
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send(src);
+
+        expect(res.status).toBe(201);
+      });
+
+      it('returns Success message after successfully adding source to the database', async () => {
+        let src = {
+          incident_id: 2,
+          src_url: 'url4',
+          src_type: 'article',
+        };
+
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send(src);
+
+        expect(res.body.message).toBe('Success!');
+      });
+
+      it('returns 201 after adding a source to the datavase', async () => {
+        let src = {
+          incident_id: 2,
+          src_url: 'url4',
+          src_type: 'article',
+        };
+
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send(src);
+        expect(res.status).toBe(201);
+      });
+
+      it('returns message requesting source information if not provided', async () => {
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send();
+        expect(res.body.message).toBe(
+          'Missing incident id, source url or source type'
+        );
+      });
+
+      it('returns 400 status when source information is not provided', async () => {
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send();
+        expect(res.status).toBe(400);
+      });
+    });
+
+    describe('GET /tags', () => {}); //end get /tags describe
+  }); //end /incidents Router
+}); //end server
