@@ -314,7 +314,7 @@ router.post('/createsource', Middleware.validateSource, (req, res) => {
  *                  example: {"err": "Error get Types of Force"}
  */
 router.get('/tags', (req, res) => {
-  Incidents.getAllTags()
+  Tags.getAllTags()
     .then((response) => {
       res.status(200).json(response);
     })
@@ -324,7 +324,7 @@ router.get('/tags', (req, res) => {
 });
 /**
  * @swagger
- * /tagtypes:
+ * /tagtypes/incidentID:
  *  get:
  *    description: Get all types of force for a particular incident from the database
  *    tags:
@@ -356,8 +356,8 @@ router.get('/tags', (req, res) => {
  *                  type: object
  *                  example: {"err": "Error get Types of Force for incident id"}
  */
-router.get('/tagtypes', (req, res) => {
-  Incidents.getAllTagTypes()
+router.get('/tags/:incidentID', (req, res) => {
+  Tags.getAllTagTypes()
     .then((response) => {
       res.status(200).json(response);
     })

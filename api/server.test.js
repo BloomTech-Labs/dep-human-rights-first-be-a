@@ -313,6 +313,25 @@ describe('server', () => {
       });
     });
 
-    describe('GET /tags', () => {}); //end get /tags describe
+    describe('GET /tags', () => {
+      it('sends 200 OK when retrieving tags', async () => {
+        const res = await supertest(server).get('/incidents/tags');
+
+        expect(res.status).toBe(200);
+      });
+
+      it('returns a list of all tags in the database', async () => {
+        const tags = [
+          { type_of_force_id: 1, type_of_force: 'projectiles', incident_id: 1 },
+          { type_of_force_id: 2, type_of_force: 'presence', incident_id: 2 },
+        ];
+
+        const res = await supertest(server).get('/incidents/tags');
+
+        expect(res.body).toEqual(tags);
+      });
+    }); //end get /tags describe
+
+    describe('GET /tags/:incidentID', () => {}); //end get /tags/:incidentID
   }); //end /incidents Router
 }); //end server

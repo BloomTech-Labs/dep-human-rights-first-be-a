@@ -3,6 +3,7 @@ const db = require('../../data/db-config');
 module.exports = {
   createTags,
   getAllTags,
+  getTagsByIncidentId,
 };
 
 async function createTags(tags, incidentID) {
@@ -17,4 +18,8 @@ async function createTypeOfForce(tof) {
 
 function getAllTags() {
   return db('type_of_force');
+}
+
+function getTagsByIncidentId(incident_id) {
+  return db('type_of_force').where({ incident_id });
 }
