@@ -20,13 +20,12 @@ exports.up = function (knex) {
     })
     .createTable('type_of_force', (type_of_force) => {
       type_of_force.increments('type_of_force_id');
-      type_of_force.string('type_of_force');
-      type_of_force.integer('incident_id');
+      type_of_force.string('type_of_force').unique();
     })
     .createTable('incident_type_of_force', (incident_type_of_force) => {
       incident_type_of_force.increments('itof_id');
-      incident_type_of_force.integer('type_of_force_id').notNullable().unique();
-      incident_type_of_force.integer('incident_id').notNullable().unique();
+      incident_type_of_force.integer('type_of_force_id').notNullable();
+      incident_type_of_force.integer('incident_id').notNullable();
     });
 };
 exports.down = function (knex) {

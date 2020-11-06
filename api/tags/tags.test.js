@@ -4,10 +4,10 @@ const Tags = require('./tagsModel');
 
 //returns an array of test type of forces
 function getTags() {
-  let tag1 = { type_of_force: 'projectile', incident_id: 1 };
-  let tag2 = { type_of_force: 'hard', incident_id: 1 };
-  let tag3 = { type_of_force: 'presence', incident_id: 2 };
-  let tag4 = { type_of_force: 'other', incident_id: 2 };
+  let tag1 = { type_of_force: 'projectile' };
+  let tag2 = { type_of_force: 'hard' };
+  let tag3 = { type_of_force: 'presence' };
+  let tag4 = { type_of_force: 'other' };
 
   return [tag1, tag2, tag3, tag4];
 }
@@ -27,6 +27,9 @@ describe('tagsModel', () => {
     await db.raw('TRUNCATE TABLE incidents RESTART IDENTITY CASCADE');
     await db.raw('TRUNCATE TABLE sources RESTART IDENTITY CASCADE');
     await db.raw('TRUNCATE TABLE type_of_force RESTART IDENTITY CASCADE');
+    await db.raw(
+      'TRUNCATE TABLE incident_type_of_force RESTART IDENTITY CASCADE'
+    );
 
     //inserts incidents into db
     await db('incidents').insert({
@@ -78,14 +81,13 @@ describe('tagsModel', () => {
       let tags = getTags();
       let tag = tags[0]['type_of_force'];
 
-      await Tags.createTags([tag], tags[0].incident_id);
+      await Tags.createTags(tag, 1);
 
       const dbTags = await db('type_of_force');
       expect(dbTags).toHaveLength(1);
       expect(dbTags[0]).toEqual({
         type_of_force_id: 1,
         type_of_force: 'projectile',
-        incident_id: 1,
       });
     });
 
@@ -96,6 +98,7 @@ describe('tagsModel', () => {
         { incident_id: 2, type_of_force: 'presence', type_of_force_id: 3 },
         { incident_id: 2, type_of_force: 'other', type_of_force_id: 4 },
       ];
+
       let tags = getTags();
       const tagList = [tags[0], tags[1], tags[2]];
 
@@ -103,10 +106,35 @@ describe('tagsModel', () => {
         await db('type_of_force').insert(tag);
       });
 
-      let tagToInsert = tags[3]['type_of_force'];
-      await Tags.createTags([tagToInsert], 2);
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 1,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 2,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 3,
+        incident_id: 2,
+      });
 
-      const dbTags = await db('type_of_force');
+      let tagToInsert = tags[3]['type_of_force'];
+      await Tags.createTags(tagToInsert, 2);
+
+      const dbTags = await db('type_of_force as tof')
+        .join(
+          'incident_type_of_force as itof',
+          'itof.type_of_force_id',
+          'tof.type_of_force_id'
+        )
+        .join('incidents as i', 'i.incident_id', 'itof.incident_id')
+        .select(
+          'tof.type_of_force_id',
+          'tof.type_of_force',
+          'itof.incident_id'
+        );
+
       expect(dbTags).toHaveLength(4);
       expect(dbTags).toEqual(expectedTags);
     });
@@ -120,7 +148,35 @@ describe('tagsModel', () => {
         await db('type_of_force').insert(tag);
       });
 
-      const dbTags = await db('type_of_force');
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 1,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 2,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 3,
+        incident_id: 2,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 4,
+        incident_id: 2,
+      });
+
+      const dbTags = await db('type_of_force as tof')
+        .join(
+          'incident_type_of_force as itof',
+          'itof.type_of_force_id',
+          'tof.type_of_force_id'
+        )
+        .join('incidents as i', 'i.incident_id', 'itof.incident_id')
+        .select(
+          'tof.type_of_force_id',
+          'tof.type_of_force',
+          'itof.incident_id'
+        );
       const modelTags = await Tags.getAllTags();
 
       expect(modelTags).toHaveLength(4);
