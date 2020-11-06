@@ -27,6 +27,9 @@ describe('sourcesModel', () => {
     await db.raw('TRUNCATE TABLE incidents RESTART IDENTITY CASCADE');
     await db.raw('TRUNCATE TABLE sources RESTART IDENTITY CASCADE');
     await db.raw('TRUNCATE TABLE type_of_force RESTART IDENTITY CASCADE');
+    await db.raw(
+      'TRUNCATE TABLE incident_type_of_force RESTART IDENTITY CASCADE'
+    );
 
     //inserts incidents into db
     await db('incidents').insert({
@@ -56,12 +59,21 @@ describe('sourcesModel', () => {
     //inserts type of force into database
     await db('type_of_force').insert({
       type_of_force: 'projectiles',
-      incident_id: 1,
     });
 
     await db('type_of_force').insert({
       type_of_force: 'presence',
+    });
+
+    //inserts incident type of force relationship
+    await db('incident_type_of_force').insert({
+      incident_id: 1,
+      type_of_force_id: 1,
+    });
+
+    await db('incident_type_of_force').insert({
       incident_id: 2,
+      type_of_force_id: 2,
     });
   });
 

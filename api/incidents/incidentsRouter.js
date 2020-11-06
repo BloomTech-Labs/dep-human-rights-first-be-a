@@ -4,8 +4,10 @@ const axios = require('axios');
 
 // Model and util imports
 const Incidents = require('./incidentsModel');
+const Sources = require('../sources/sourcesModel');
+const Tags = require('../tags/tagsModel');
 // const { post } = require('../dsService/dsRouter');
-const { validateIncidents } = require('./middleware/index');
+const Middleware = require('./middleware/index');
 
 // ###Incidents Routes###
 
@@ -66,24 +68,14 @@ const { validateIncidents } = require('./middleware/index');
 router.get('/showallincidents', async (req, res) => {
   try {
     const incidents = await Incidents.getAllIncidents();
-    const sources = await Incidents.getAllSources();
-    const tofTypes = await Incidents.getAllTags();
-    const typeLinks = await Incidents.getAllTagTypes();
+    const sources = await Sources.getAllSources();
+    const tofTypes = await Tags.getAllTags();
 
     const responseArray = [];
-    const tagsArray = [];
-
-    tofTypes.forEach((tof) => {
-      typeLinks.forEach((connection) => {
-        if (connection.type_of_force_id === tof.type_of_force_id) {
-          tagsArray.push({ ...tof, incident_id: connection.incident_id });
-        }
-      });
-    });
 
     incidents.forEach((incident) => {
       incident['categories'] = [];
-      tagsArray.forEach((tag) => {
+      tofTypes.forEach((tag) => {
         if (tag.incident_id === incident.incident_id) {
           incident.categories.push(tag.type_of_force);
         }
@@ -103,7 +95,7 @@ router.get('/showallincidents', async (req, res) => {
     });
     res.json(responseArray);
   } catch (e) {
-    res.status(500).json({ message: 'Request Error' });
+    res.status(500).json({ message: 'Request Error', error: e });
   }
 });
 
@@ -142,12 +134,12 @@ router.get('/showallincidents', async (req, res) => {
  *                  type: object
  *                  example: {"message": "Error creating Record"}
  */
-router.post('/createincidents', validateIncidents, (req, res) => {
+router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
   req.body.forEach((incident) => {
     Incidents.createIncident(incident)
 
-      .then((post) => {
-        res.status(201).json(post);
+      .then((success) => {
+        res.status(201).json(success);
       })
       .catch((err) => {
         console.log(err);
@@ -193,7 +185,7 @@ router.post('/createincidents', validateIncidents, (req, res) => {
  *                  example: {"err": "Error get Sources"}
  */
 router.get('/sources', (req, res) => {
-  Incidents.getAllSources()
+  Sources.getAllSources()
     .then((response) => {
       res.status(200).json(response);
     })
@@ -229,7 +221,7 @@ router.get('/sources', (req, res) => {
 // returns all sources associated with incident ID provided
 router.get('/sources/:id', (req, res) => {
   const { id } = req.params;
-  Incidents.getSourcesById(id).then((response) => {
+  Sources.getSourcesByIncidentId(id).then((response) => {
     res.json(response);
   });
 });
@@ -237,7 +229,7 @@ router.get('/sources/:id', (req, res) => {
 /**
  * @swagger
  * /createsource:
- *  get:
+ *  post:
  *    description: Create a source
  *    tags:
  *      - sources
@@ -269,10 +261,16 @@ router.get('/sources/:id', (req, res) => {
  *                  type: object
  *                  example: {"error": "Error creating Source"}
  */
-router.post('/createsource', (req, res) => {
-  Incidents.createSingleSource(req.body)
-    .then((response) => {
-      res.json(response);
+router.post('/createsource', Middleware.validateSource, (req, res) => {
+  //destructures request body so can be sent to the model function with the appropiate values
+  const incident_id = req.body.incident_id;
+  let src = {};
+  src.src_url = req.body.src_url;
+  src.src_type = req.body.src_type;
+
+  Sources.createSource([src], incident_id)
+    .then(() => {
+      res.status(201).json({ message: 'Success!' });
     })
     .catch((error) => {
       res.status(500).json(error);
@@ -316,7 +314,7 @@ router.post('/createsource', (req, res) => {
  *                  example: {"err": "Error get Types of Force"}
  */
 router.get('/tags', (req, res) => {
-  Incidents.getAllTags()
+  Tags.getAllTags()
     .then((response) => {
       res.status(200).json(response);
     })
@@ -326,7 +324,7 @@ router.get('/tags', (req, res) => {
 });
 /**
  * @swagger
- * /tagtypes:
+ * /tagtypes/incidentID:
  *  get:
  *    description: Get all types of force for a particular incident from the database
  *    tags:
@@ -358,60 +356,13 @@ router.get('/tags', (req, res) => {
  *                  type: object
  *                  example: {"err": "Error get Types of Force for incident id"}
  */
-router.get('/tagtypes', (req, res) => {
-  Incidents.getAllTagTypes()
+router.get('/tags/:incidentID', (req, res) => {
+  Tags.getTagsByIncidentId(req.params.incidentID)
     .then((response) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      res.status(500).json(err);
-    });
-});
-
-// ###Utility Routes###
-/**
- * @swagger
- * /cleardb:
- *  get:
- *    description: Deletes the contents in the database
- *    tags:
- *      - utility
- *    produces:
- *      - applicaiton/json
- *    responses:
- *      200:
- *        description: deletes all the contents in the database
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                - api
- *              properties:
- *                api:
- *                  type: object
- *                  example: {message: 'All database contents have been deleted'}
- *      500:
- *        description: server error
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              required:
- *                -api
- *              properties:
- *                api:
- *                  type: object
- *                  example: {"error": "Error to delete all contents from database"}
- */
-router.delete('/cleardb', (req, res) => {
-  Incidents.deleteDB()
-    .then((response) => {
-      console.log(response);
-      res.json({ message: 'All database contents have been deleted' });
-    })
-    .catch((error) => {
-      res.json(error);
+      res.status(500).json({ err: err.message });
     });
 });
 

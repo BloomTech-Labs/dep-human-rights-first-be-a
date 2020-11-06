@@ -5,7 +5,6 @@ const Tags = require('../tags/tagsModel');
 module.exports = {
   getAllIncidents,
   createIncident,
-  deleteDB,
 };
 
 async function getAllIncidents() {
@@ -28,11 +27,4 @@ async function createIncident(incident) {
   await Sources.createSource(incident.src, incidentID[0]);
   await Tags.createTags(incident.tags, incidentID[0]);
   return { message: 'Success!' };
-}
-
-async function deleteDB() {
-  await db('incident_type_of_force').del();
-  await db('type_of_force').del();
-  await db('sources').del();
-  return await db('incidents').del();
 }
