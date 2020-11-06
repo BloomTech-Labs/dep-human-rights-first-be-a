@@ -33,5 +33,12 @@ function getAllTags() {
 }
 
 async function getTagsByIncidentId(incident_id) {
-  return db('type_of_force').where({ incident_id });
+  return db('type_of_force as tof')
+    .join(
+      'incident_type_of_force as itof',
+      'itof.incident_id',
+      'tof.type_of_force_id'
+    )
+    .select('tof.type_of_force', 'tof.type_of_force_id', 'itof.incident_id')
+    .where('itof.incident_id', incident_id);
 }
