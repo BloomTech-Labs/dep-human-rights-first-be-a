@@ -138,6 +138,69 @@ describe('tagsModel', () => {
       expect(dbTags).toHaveLength(4);
       expect(dbTags).toEqual(expectedTags);
     });
+
+    it('Does not add duplicate tags to the database', async () => {
+      let tags = getTags();
+      const tagList = [tags[0], tags[1], tags[2]];
+
+      await asyncForEach(tagList, async (tag) => {
+        await db('type_of_force').insert(tag);
+      });
+
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 1,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 2,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 3,
+        incident_id: 2,
+      });
+
+      const tags1 = await db('type_of_force');
+
+      await Tags.createTags('projectile', 1);
+      const tags2 = await db('type_of_force');
+
+      expect(tags1).toEqual(tags2);
+    });
+
+    it('Does add the new incident to type of force relationship', async () => {
+      const expected = [
+        { itof_id: 1, type_of_force_id: 1, incident_id: 1 },
+        { itof_id: 2, type_of_force_id: 2, incident_id: 1 },
+        { itof_id: 3, type_of_force_id: 3, incident_id: 2 },
+        { itof_id: 4, type_of_force_id: 1, incident_id: 1 },
+      ];
+
+      let tags = getTags();
+      const tagList = [tags[0], tags[1], tags[2]];
+
+      await asyncForEach(tagList, async (tag) => {
+        await db('type_of_force').insert(tag);
+      });
+
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 1,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 2,
+        incident_id: 1,
+      });
+      await db('incident_type_of_force').insert({
+        type_of_force_id: 3,
+        incident_id: 2,
+      });
+
+      await Tags.createTags('projectile', 1);
+      const incidentTypes = await db('incident_type_of_force');
+
+      expect(incidentTypes).toEqual(expected);
+    });
   });
 
   describe('getAllTags()', () => {

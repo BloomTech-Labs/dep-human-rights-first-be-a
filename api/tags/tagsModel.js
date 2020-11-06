@@ -4,14 +4,22 @@ module.exports = {
   createTags,
   getAllTags,
   getTagsByIncidentId,
+  getTagsByName,
 };
 
 async function createTags(tag, incidentID) {
-  const tagId = await db('type_of_force').insert(
-    { type_of_force: tag },
-    'type_of_force_id'
-  );
-  await createIncidentTypeOfForce(incidentID, tagId[0]);
+  let checkTag = await getTagsByName(tag);
+
+  if (checkTag.length <= 0) {
+    const tagId = await db('type_of_force').insert(
+      { type_of_force: tag },
+      'type_of_force_id'
+    );
+    await createIncidentTypeOfForce(incidentID, tagId[0]);
+  } else {
+    const forceId = checkTag[0]['type_of_force_id'];
+    await createIncidentTypeOfForce(incidentID, forceId);
+  }
 }
 
 async function createIncidentTypeOfForce(incidentID, tagId) {
@@ -21,7 +29,7 @@ async function createIncidentTypeOfForce(incidentID, tagId) {
   });
 }
 
-function getAllTags() {
+async function getAllTags() {
   return db('type_of_force as tof')
     .join(
       'incident_type_of_force as itof',
@@ -41,4 +49,8 @@ async function getTagsByIncidentId(incident_id) {
     )
     .select('tof.type_of_force', 'tof.type_of_force_id', 'itof.incident_id')
     .where('itof.incident_id', incident_id);
+}
+
+async function getTagsByName(type_of_force) {
+  return db('type_of_force').where({ type_of_force });
 }
