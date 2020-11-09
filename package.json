@@ -14,7 +14,8 @@
     "knex": "npx knex --knexfile config/knexfile.js",
     "tests": "npx jest --forceExit",
     "test": "cross-env DB_ENV=testing jest --watch --runInBand",
-    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
+    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit",
+    "getcsv": "node csvtojson.js"
   },
   "jest": {
     "testEnvironment": "node",
