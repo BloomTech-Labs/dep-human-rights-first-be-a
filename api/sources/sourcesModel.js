@@ -4,6 +4,7 @@ module.exports = {
   getAllSources,
   getSourcesByIncidentId,
   createSource,
+  getSourcesByUrl,
 };
 
 async function getSourcesByIncidentId(incident_id) {
@@ -12,15 +13,24 @@ async function getSourcesByIncidentId(incident_id) {
 
 async function createSource(sources, incidentID) {
   await sources.forEach(async (sourceURL) => {
-    const source = {
-      incident_id: incidentID,
-      src_url: sourceURL.src_url,
-      src_type: sourceURL.src_type,
-    };
-    await db('sources').insert(source);
+    const src_exists = await getSourcesByUrl(sourceURL.src_url);
+    if (src_exists.length > 0) {
+      continue;
+    } else {
+      const source = {
+        incident_id: incidentID,
+        src_url: sourceURL.src_url,
+        src_type: sourceURL.src_type,
+      };
+      await db('sources').insert(source);
+    }
   });
 }
 
 function getAllSources() {
   return db('sources');
+}
+
+async function getSourcesByUrl(src_url) {
+  return db('sources').where({ src_url });
 }

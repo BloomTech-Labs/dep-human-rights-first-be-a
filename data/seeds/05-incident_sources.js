@@ -1,9 +1,9 @@
 exports.seed = function (knex) {
   // Deletes ALL existing entries
-  return knex('sources')
+  return knex('incident_sources')
     .del()
     .then(function () {
       // Inserts seed entries
-      return knex('sources').insert([{ src_url: 'url1', src_type: 'post' }]);
+      return knex('incident_sources').insert([{ src_id: 1, incident_id: 1 }]);
     });
 };
