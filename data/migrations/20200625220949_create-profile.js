@@ -14,7 +14,6 @@ exports.up = function (knex) {
     })
     .createTable('sources', (sources) => {
       sources.increments('src_id').notNullable().unique().primary();
-      sources.integer('incident_id');
       sources.string('src_url');
       sources.string('src_type');
     })

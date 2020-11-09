@@ -30,6 +30,7 @@ describe('tagsModel', () => {
     await db.raw(
       'TRUNCATE TABLE incident_type_of_force RESTART IDENTITY CASCADE'
     );
+    await db.raw('TRUNCATE TABLE incident_sources RESTART IDENTITY CASCADE');
 
     //inserts incidents into db
     await db('incidents').insert({
@@ -58,22 +59,24 @@ describe('tagsModel', () => {
 
     //inserts sources into database
     await db('sources').insert({
-      incident_id: 1,
       src_url: 'url1',
       src_type: 'post',
     });
 
     await db('sources').insert({
-      incident_id: 1,
       src_url: 'url2',
       src_type: 'video',
     });
 
     await db('sources').insert({
-      incident_id: 2,
       src_url: 'url3',
       src_type: 'article',
     });
+
+    //inserts relationship between sources and incidents
+    await db('incident_sources').insert({ incident_id: 1, src_id: 1 });
+    await db('incident_sources').insert({ incident_id: 1, src_id: 2 });
+    await db('incident_sources').insert({ incident_id: 2, src_id: 3 });
   });
 
   describe('createTags(tags, incidentID)', () => {

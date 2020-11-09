@@ -66,6 +66,10 @@ describe('incidentsModel', () => {
     await db.raw('TRUNCATE TABLE incidents RESTART IDENTITY CASCADE');
     await db.raw('TRUNCATE TABLE sources RESTART IDENTITY CASCADE');
     await db.raw('TRUNCATE TABLE type_of_force RESTART IDENTITY CASCADE');
+    await db.raw(
+      'TRUNCATE TABLE incident_type_of_force RESTART IDENTITY CASCADE'
+    );
+    await db.raw('TRUNCATE TABLE incident_sources RESTART IDENTITY CASCADE');
   });
 
   describe('getAllIncidents', () => {
@@ -90,7 +94,7 @@ describe('incidentsModel', () => {
     it('adds new incident to empty db and returns success message', async () => {
       let incidents = getTestIncidents();
       let incident = incidents[0];
-      incident.src = ['Twitter'];
+      incident.src = [{ src_url: 'twitter@twitter.com', src_type: 'Post' }];
       incident.tags = ['hard', 'projectiles'];
 
       const add = await Incidents.createIncident(incident);
@@ -109,7 +113,7 @@ describe('incidentsModel', () => {
       });
 
       let incident = incidents[3];
-      incident.src = ['Twitter'];
+      incident.src = [{ src_url: 'twitter@twitter.com', src_type: 'Post' }];
       incident.tags = ['hard', 'projectiles'];
       const add = await Incidents.createIncident(incident);
 

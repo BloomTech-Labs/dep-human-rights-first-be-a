@@ -17,8 +17,8 @@ const expected = [
     lat: 47.0417,
     long: -122.8959,
     src: [
-      { src_id: 1, incident_id: 1, src_url: 'url1', src_type: 'post' },
-      { src_id: 2, incident_id: 1, src_url: 'url2', src_type: 'video' },
+      { src_id: 1, src_url: 'url1', src_type: 'post' },
+      { src_id: 2, src_url: 'url2', src_type: 'video' },
     ],
     categories: ['projectiles'],
   },
@@ -36,7 +36,6 @@ const expected = [
     src: [
       {
         src_id: 3,
-        incident_id: 2,
         src_url: 'url3',
         src_type: 'article',
       },
@@ -56,6 +55,7 @@ describe('server', () => {
     await db.raw(
       'TRUNCATE TABLE incident_type_of_force RESTART IDENTITY CASCADE'
     );
+    await db.raw('TRUNCATE TABLE incident_sources RESTART IDENTITY CASCADE');
 
     //inserts incidents into db
     await db('incidents').insert({
@@ -104,22 +104,24 @@ describe('server', () => {
 
     //inserts sources into database
     await db('sources').insert({
-      incident_id: 1,
       src_url: 'url1',
       src_type: 'post',
     });
 
     await db('sources').insert({
-      incident_id: 1,
       src_url: 'url2',
       src_type: 'video',
     });
 
     await db('sources').insert({
-      incident_id: 2,
       src_url: 'url3',
       src_type: 'article',
     });
+
+    //inserts source and incident relationships
+    await db('incident_sources').insert({ incident_id: 1, src_id: 1 });
+    await db('incident_sources').insert({ incident_id: 1, src_id: 2 });
+    await db('incident_sources').insert({ incident_id: 2, src_id: 3 });
   }); //end beforeEach
 
   describe('GET / for indexRouter', () => {
@@ -138,7 +140,6 @@ describe('server', () => {
     describe('GET /showallincidents', () => {
       it('returns list of incidents', async () => {
         const res = await supertest(server).get('/incidents/showallincidents');
-
         expect(res.body).toEqual(expected);
       });
 
@@ -246,13 +247,11 @@ describe('server', () => {
 
       it('returns a list of sources for the given incident id in the url', async () => {
         const src1 = [
-          { src_id: 1, incident_id: 1, src_url: 'url1', src_type: 'post' },
-          { src_id: 2, incident_id: 1, src_url: 'url2', src_type: 'video' },
+          { src_id: 1, src_url: 'url1', src_type: 'post' },
+          { src_id: 2, src_url: 'url2', src_type: 'video' },
         ];
 
-        const src2 = [
-          { src_id: 3, incident_id: 2, src_url: 'url3', src_type: 'article' },
-        ];
+        const src2 = [{ src_id: 3, src_url: 'url3', src_type: 'article' }];
 
         const res = await supertest(server).get('/incidents/sources/1');
         expect(res.body).toEqual(src1);
