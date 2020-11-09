@@ -17,10 +17,19 @@ async function getSourcesByIncidentId(incident_id) {
 async function createSource(sources, incidentID) {
   for (let i = 0; i < sources.length; i++) {
     let sourceURL = sources[i];
-    const src_exists = await getSourcesByUrl(sourceURL.src_url);
-    if (src_exists.length > 0) {
-      await createIncidentSources(incidentID, src_exists[0].src_id);
-    } else {
+    try {
+      const src_exists = await getSourcesByUrl(sourceURL.src_url);
+      if (src_exists.length > 0) {
+        await createIncidentSources(incidentID, src_exists[0].src_id);
+      } else {
+        const source = {
+          src_url: sourceURL.src_url,
+          src_type: sourceURL.src_type,
+        };
+        const srcID = await db('sources').insert(source, 'src_id');
+        await createIncidentSources(incidentID, srcID[0]);
+      }
+    } catch {
       const source = {
         src_url: sourceURL.src_url,
         src_type: sourceURL.src_type,

@@ -407,6 +407,7 @@ router.get('/tags/:incidentID', (req, res) => {
  */
 router.get('/fetchfromds', (req, res) => {
   let incidents = [];
+  let incidentList = [];
   axios
     .get(process.env.DS_API_URL)
     .then((response) => {
@@ -416,85 +417,87 @@ router.get('/fetchfromds', (req, res) => {
     .catch((err) => {
       res.json(err);
     })
-    .finally(() => {
+    .finally(async () => {
       incidents.forEach((incident) => {
-        let src = [];
-        let sources = incident.src;
+        if (incident.city != null) {
+          let src = [];
+          let sources = incident.src;
 
-        sources.forEach((source) => {
-          let s = { src_url: '', src_type: '' };
-          let src_type = '';
-          s.src_url = source;
-          let url = '';
+          sources.forEach((source) => {
+            let s = { src_url: '', src_type: '' };
+            let src_type = '';
+            s.src_url = source;
+            let url = '';
 
-          let comps = source.split('https://www.')[1];
-          if (comps) {
-            url = comps.split('.com')[0];
-          } else {
-            let components = source.split('https://')[1];
-            if (components != undefined) {
-              let components2 = components.split('.com')[0];
-              if (components2.length > 11) {
-                let comps3 = components2.split('.org')[0];
-                if (comps3.length > 10) {
-                  url = comps3.split('.')[0];
+            let comps = source.split('https://www.')[1];
+            if (comps) {
+              url = comps.split('.com')[0];
+            } else {
+              let components = source.split('https://')[1];
+              if (components != undefined) {
+                let components2 = components.split('.com')[0];
+                if (components2.length > 11) {
+                  let comps3 = components2.split('.org')[0];
+                  if (comps3.length > 10) {
+                    url = comps3.split('.')[0];
+                  } else {
+                    url = comps3;
+                  }
                 } else {
-                  url = comps3;
+                  url = components2;
                 }
-              } else {
-                url = components2;
               }
             }
-          }
 
-          switch (url) {
-            case 'youtube':
-            case 'whyy':
-            case 'youtu':
-            case 'clips':
-            case 'tuckbot':
-            case 'peertube':
-            case 'drive':
-            case 'm':
-            case 'getway':
-              src_type = 'video';
-              break;
-            case 'instagram':
-            case 'twitter':
-            case 'reddit':
-            case 'papost':
-            case 'mobile':
-            case 'nyc':
-            case 'v':
-              src_type = 'post';
-              break;
-            case 'nlg-la':
-            case 'ewscripps':
-              src_type = 'court_document';
-              break;
-            case 'i':
-            case 'ibb':
-            case 'photos':
-              src_type = 'image';
-              break;
-            case 'doverpolice':
-            case 'dsp':
-              src_type = 'police_report';
-              break;
-            default:
-              src_type = 'article';
-              break;
-          }
+            switch (url) {
+              case 'youtube':
+              case 'whyy':
+              case 'youtu':
+              case 'clips':
+              case 'tuckbot':
+              case 'peertube':
+              case 'drive':
+              case 'm':
+              case 'getway':
+                src_type = 'video';
+                break;
+              case 'instagram':
+              case 'twitter':
+              case 'reddit':
+              case 'papost':
+              case 'mobile':
+              case 'nyc':
+              case 'v':
+                src_type = 'post';
+                break;
+              case 'nlg-la':
+              case 'ewscripps':
+                src_type = 'court_document';
+                break;
+              case 'i':
+              case 'ibb':
+              case 'photos':
+                src_type = 'image';
+                break;
+              case 'doverpolice':
+              case 'dsp':
+                src_type = 'police_report';
+                break;
+              default:
+                src_type = 'article';
+                break;
+            }
 
-          s.src_type = src_type;
-          if (s.src_type === '') {
-            console.log(source);
-            console.log(s);
-          }
-          src.push(s);
-        });
-        console.log(incident);
+            s.src_type = src_type;
+            src.push(s);
+          });
+          incidentList.push(incident);
+        }
       });
+
+      for (let i = 0; i < incidentList.length; i++) {
+        await Incidents.createIncident(incidentList[i]);
+      }
     });
 });
 

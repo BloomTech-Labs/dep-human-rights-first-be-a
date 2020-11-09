@@ -13,7 +13,6 @@ async function getAllIncidents() {
 
 async function createIncident(incident) {
   const newIncident = {
-    id: incident.id,
     city: incident.city,
     state: incident.state,
     title: incident.title,
