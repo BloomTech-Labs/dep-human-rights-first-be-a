@@ -19,7 +19,7 @@ async function createSource(sources, incidentID) {
     let sourceURL = sources[i];
     const src_exists = await getSourcesByUrl(sourceURL.src_url);
     if (src_exists.length > 0) {
-      await createIncidentSources(incidentID, src_exists[0]);
+      await createIncidentSources(incidentID, src_exists[0].src_id);
     } else {
       const source = {
         src_url: sourceURL.src_url,
