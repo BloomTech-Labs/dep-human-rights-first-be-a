@@ -70,11 +70,11 @@ router.get('/showallincidents', async (req, res) => {
     const incidents = await Incidents.getAllIncidents();
     const sources = await Sources.getAllSources();
     const tofTypes = await Tags.getAllTags();
-
     const responseArray = [];
 
     incidents.forEach((incident) => {
       incident['categories'] = [];
+      incident['src'] = [];
       tofTypes.forEach((tag) => {
         if (tag.incident_id === incident.incident_id) {
           incident.categories.push(tag.type_of_force);
@@ -87,7 +87,11 @@ router.get('/showallincidents', async (req, res) => {
       incident['src'] = [];
       sources.forEach((source) => {
         if (source.incident_id === incident.incident_id) {
-          incident.src.push(source);
+          let src = { src_id: 0, src_url: '', src_type: '' };
+          src.src_id = source.src_id;
+          src.src_url = source.src_url;
+          src.src_type = source.src_type;
+          incident.src.push(src);
         }
       });
 

@@ -4,10 +4,10 @@ const Sources = require('./sourcesModel');
 
 //returns an array of dummy sources to use for testing
 function getSources() {
-  let src1 = { incident_id: 1, src_url: 'url1', src_type: 'post' };
-  let src2 = { incident_id: 1, src_url: 'url2', src_type: 'video' };
-  let src3 = { incident_id: 2, src_url: 'url3', src_type: 'video' };
-  let src4 = { incident_id: 2, src_url: 'url4', src_type: 'article' };
+  let src1 = { src_url: 'url1', src_type: 'post' };
+  let src2 = { src_url: 'url2', src_type: 'video' };
+  let src3 = { src_url: 'url3', src_type: 'video' };
+  let src4 = { src_url: 'url4', src_type: 'article' };
 
   return [src1, src2, src3, src4];
 }
@@ -30,6 +30,7 @@ describe('sourcesModel', () => {
     await db.raw(
       'TRUNCATE TABLE incident_type_of_force RESTART IDENTITY CASCADE'
     );
+    await db.raw('TRUNCATE TABLE incident_sources RESTART IDENTITY CASCADE');
 
     //inserts incidents into db
     await db('incidents').insert({
@@ -78,18 +79,6 @@ describe('sourcesModel', () => {
   });
 
   describe('getAllSources()', () => {
-    it('gets a single source from an empty database ', async () => {
-      await db('sources').insert({
-        incident_id: 1,
-        src_url: 'something.com',
-        src_type: 'post',
-      });
-
-      const sources = await Sources.getAllSources();
-
-      expect(sources).toHaveLength(1);
-    });
-
     it('gets all sources from a non-empty database', async () => {
       let sources = getSources();
 
@@ -97,8 +86,15 @@ describe('sourcesModel', () => {
         await db('sources').insert(source);
       });
 
+      await db('incident_sources').insert({ incident_id: 1, src_id: 1 });
+      await db('incident_sources').insert({ incident_id: 2, src_id: 2 });
+      await db('incident_sources').insert({ incident_id: 1, src_id: 3 });
+      await db('incident_sources').insert({ incident_id: 2, src_id: 4 });
+
       const sourcesFromModel = await Sources.getAllSources();
-      const dbSources = await db('sources');
+      const dbSources = await db('sources as s')
+        .join('incident_sources as is', 'is.src_id', 's.src_id')
+        .select('s.src_id', 's.src_url', 's.src_type', 'is.incident_id');
 
       expect(sourcesFromModel).toHaveLength(4);
       expect(sourcesFromModel).toEqual(dbSources);
@@ -111,6 +107,7 @@ describe('sourcesModel', () => {
       let src = sources[0];
 
       await db('sources').insert(src);
+      await db('incident_sources').insert({ incident_id: 1, src_id: 1 });
 
       const source = await Sources.getSourcesByIncidentId(1);
       const dbSource = await db('sources');
@@ -126,20 +123,19 @@ describe('sourcesModel', () => {
         await db('sources').insert(source);
       });
 
+      await db('incident_sources').insert({ incident_id: 1, src_id: 1 });
+      await db('incident_sources').insert({ incident_id: 1, src_id: 2 });
+      await db('incident_sources').insert({ incident_id: 2, src_id: 3 });
+      await db('incident_sources').insert({ incident_id: 2, src_id: 4 });
+
       //check that getting sources pertaining a particular incident based on incident id
       const incident1sources = await Sources.getSourcesByIncidentId(1);
       const incident2sources = await Sources.getSourcesByIncidentId(2);
 
       //checks that the array we are getting back has only 1 incident id related to the particular call
       expect(incident1sources).toHaveLength(2);
-      incident1sources.forEach((source) => {
-        expect(source.incident_id).toBe(1);
-      });
 
       expect(incident2sources).toHaveLength(2);
-      incident2sources.forEach((source) => {
-        expect(source.incident_id).toBe(2);
-      });
     });
   });
 

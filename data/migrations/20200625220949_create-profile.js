@@ -14,7 +14,6 @@ exports.up = function (knex) {
     })
     .createTable('sources', (sources) => {
       sources.increments('src_id').notNullable().unique().primary();
-      sources.integer('incident_id');
       sources.string('src_url');
       sources.string('src_type');
     })
@@ -26,6 +25,11 @@ exports.up = function (knex) {
       incident_type_of_force.increments('itof_id');
       incident_type_of_force.integer('type_of_force_id').notNullable();
       incident_type_of_force.integer('incident_id').notNullable();
+    })
+    .createTable('incident_sources', (incident_sources) => {
+      incident_sources.increments('is_id');
+      incident_sources.integer('src_id').notNullable();
+      incident_sources.integer('incident_id').notNullable();
     });
 };
 exports.down = function (knex) {
@@ -33,5 +37,6 @@ exports.down = function (knex) {
     .dropTableIfExists('incidents')
     .dropTableIfExists('sources')
     .dropTableIfExists('type_of_force')
-    .dropTableIfExists('incident_type_of_force');
+    .dropTableIfExists('incident_type_of_force')
+    .dropTableIfExists('incident_sources');
 };
