@@ -27,8 +27,10 @@ async function createIncident(incident) {
   const incidentID = await db('incidents').insert(newIncident, 'incident_id');
   await Sources.createSource(incident.src, incidentID[0]);
 
-  for (let i = 0; i < tagList.length; i++) {
-    await Tags.createTags(tagList[i], incidentID[0]);
+  if (tagList[0] != '') {
+    for (let i = 0; i < tagList.length; i++) {
+      await Tags.createTags(tagList[i], incidentID[0]);
+    }
   }
   return { message: 'Success!' };
 }
