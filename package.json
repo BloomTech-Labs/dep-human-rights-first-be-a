@@ -15,7 +15,7 @@
     "tests": "npx jest --forceExit",
     "test": "cross-env DB_ENV=testing jest --watch --runInBand",
     "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit",
-    "getcsv": "node csvtojson.js"
+    "getcsv": "node ./data/csvtojson.js"
   },
   "jest": {
     "testEnvironment": "node",
