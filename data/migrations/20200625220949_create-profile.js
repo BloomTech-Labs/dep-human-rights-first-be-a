@@ -13,7 +13,7 @@ exports.up = function (knex) {
     })
     .createTable('sources', (sources) => {
       sources.increments('src_id').notNullable().unique().primary();
-      sources.string('src_url');
+      sources.string('src_url', 10000);
       sources.string('src_type');
     })
     .createTable('type_of_force', (type_of_force) => {

@@ -408,6 +408,7 @@ router.get('/tags/:incidentID', (req, res) => {
 router.get('/fetchfromds', (req, res) => {
   let incidents = [];
   let incidentList = [];
+
   axios
     .get(process.env.DS_API_URL)
     .then((response) => {
@@ -420,8 +421,8 @@ router.get('/fetchfromds', (req, res) => {
     .finally(async () => {
       incidents.forEach((incident) => {
         if (incident.city != null) {
-          let src = [];
           let sources = incident.src;
+          incident.src = [];
 
           sources.forEach((source) => {
             let s = { src_url: '', src_type: '' };
@@ -489,12 +490,11 @@ router.get('/fetchfromds', (req, res) => {
             }
 
             s.src_type = src_type;
-            src.push(s);
+            incident.src.push(s);
           });
           incidentList.push(incident);
         }
       });
-
       for (let i = 0; i < incidentList.length; i++) {
         await Incidents.createIncident(incidentList[i]);
       }
