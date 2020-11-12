@@ -34,26 +34,56 @@ const { calculateLimitAndOffset } = require('paginate-info');
  *              properties:
  *                api:
  *                  type: array
- *                  example: [{
-        "incident_id": 1,
-        "id": "wa-olympia-1",
-        "city": "Olympia",
-        "state": "Washington",
-        "lat": 47.0417,
-        "long": -122.8959,
-        "title": "Police respond to broken windows with excessive force",
-        "desc": "Footage shows a few individuals break off from a protest to smash City Hall windows. Protesters shout at vandals to stop.\n\nPolice then arrive. They arrest multiple individuals near the City Hall windows, including one individual who appeared to approach the vandals in an effort to defuse the situation.\n\nPolice fire tear gas and riot rounds at protesters during the arrests. Protesters become agitated.\n\nAfter police walk arrestee away, protesters continue to shout at police. Police respond with a second bout of tear gas and riot rounds.\n\nA racial slur can be heard shouted, although it is unsure who is shouting.",
-        "date": "2020-05-31T04:00:00.000Z",
-        "categories": [],
-        "src": [
-            {
-                "src_id": 1,
-                "incident_id": 1,
-                "src_url": "poopy",
-                "src_type": "ecks dee"
-            }
-        ]
-    }]
+ *                  example: [
+        {
+            "incident_id": 1,
+            "city": "Olympia",
+            "state": "Washington",
+            "lat": 47.037872,
+            "long": -122.900696,
+            "title": "Police respond to broken windows with excessive force",
+            "desc": "Footage shows a few individuals break off from a protest to smash City Hall windows. Protesters shout at vandals to stop.  Police then arrive. They arrest multiple individuals near the City Hall windows, including one individual who appeared to approach the vandals in an effort to defuse the situation.  Police fire tear gas and riot rounds at protesters during the arrests. Protesters become agitated.  After police walk arrestee away, protesters continue to shout at police. Police respond with a second bout of tear gas and riot rounds.  A racial slur can be heard shouted, although it is unsure who is shouting.",
+            "date": "2020-05-31T04:00:00.000Z",
+            "src": [
+                {
+                    "src_id": 1,
+                    "src_type": "video",
+                    "src_url": "https://www.youtube.com/watch?v=s7MM1VauRHo"
+                }
+            ],
+            "categories": [
+                {
+                    "type_of_force": "arrest",
+                    "type_of_force_id": 1,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "less-lethal",
+                    "type_of_force_id": 2,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "projectile",
+                    "type_of_force_id": 3,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "protester",
+                    "type_of_force_id": 4,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "shoot",
+                    "type_of_force_id": 5,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "tear-gas",
+                    "type_of_force_id": 6,
+                    "incident_id": 1
+                }
+            ]
+        },
  *      500:
  *        description: Server response error
  *        content:
