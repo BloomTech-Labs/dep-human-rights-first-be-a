@@ -65,7 +65,7 @@ const Middleware = require('./middleware/index');
  *                  type: string
  *                  example: "Request Error"
  */
-router.get('/showallincidents', async (req, res) => {
+router.get('/showallincidents/', async (req, res) => {
   try {
     const incidents = await Incidents.getAllIncidents();
     const sources = await Sources.getAllSources();
@@ -97,11 +97,12 @@ router.get('/showallincidents', async (req, res) => {
 
       responseArray.push(incident);
     });
+    const { items_limit, offset } = req.query;
     res.json(responseArray);
   } catch (e) {
     res.status(500).json({ message: 'Request Error', error: e });
   }
-});
+}); //end showallincidents
 
 /**
  * @swagger
@@ -150,7 +151,7 @@ router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
         res.status(500).json({ message: 'Error creating Record' });
       });
   });
-});
+}); //end createIncidents
 
 // ###Sources Routes###
 /**
@@ -196,7 +197,7 @@ router.get('/sources', (req, res) => {
     .catch((err) => {
       res.status(500).json(err);
     });
-});
+}); //end sources
 
 /**
  * @swagger
@@ -498,7 +499,7 @@ router.get('/fetchfromds', (req, res) => {
       for (let i = 0; i < incidentList.length; i++) {
         await Incidents.createIncident(incidentList[i]);
       }
-    });
+    }); //end fetch from ds
 });
 
 module.exports = router;
