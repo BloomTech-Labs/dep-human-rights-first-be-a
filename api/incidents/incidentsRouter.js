@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const paginate = require('paginate-info');
 
 // Model and util imports
 const Incidents = require('./incidentsModel');
@@ -9,7 +8,6 @@ const Sources = require('../sources/sourcesModel');
 const Tags = require('../tags/tagsModel');
 // const { post } = require('../dsService/dsRouter');
 const Middleware = require('./middleware/index');
-const { calculateLimitAndOffset } = require('paginate-info');
 
 // ###Incidents Routes###
 
