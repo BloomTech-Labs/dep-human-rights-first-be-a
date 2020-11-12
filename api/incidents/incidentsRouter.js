@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const paginate = require('paginate-info');
 
 // Model and util imports
 const Incidents = require('./incidentsModel');
@@ -8,6 +9,7 @@ const Sources = require('../sources/sourcesModel');
 const Tags = require('../tags/tagsModel');
 // const { post } = require('../dsService/dsRouter');
 const Middleware = require('./middleware/index');
+const { calculateLimitAndOffset } = require('paginate-info');
 
 // ###Incidents Routes###
 
@@ -65,43 +67,15 @@ const Middleware = require('./middleware/index');
  *                  type: string
  *                  example: "Request Error"
  */
-router.get('/showallincidents', async (req, res) => {
-  try {
-    const incidents = await Incidents.getAllIncidents();
-    const sources = await Sources.getAllSources();
-    const tofTypes = await Tags.getAllTags();
-    const responseArray = [];
-
-    incidents.forEach((incident) => {
-      incident['categories'] = [];
-      incident['src'] = [];
-      tofTypes.forEach((tag) => {
-        if (tag.incident_id === incident.incident_id) {
-          incident.categories.push(tag.type_of_force);
-        }
-      });
+router.get('/showallincidents/', async (req, res) => {
+  await Incidents.showAllIncidents(req.query.limit, req.query.offset)
+    .then((incidents) => {
+      res.status(200).json({ incidents });
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
     });
-
-    // Reconstructs the incident object with it's sources to send to front end
-    incidents.forEach((incident) => {
-      incident['src'] = [];
-      sources.forEach((source) => {
-        if (source.incident_id === incident.incident_id) {
-          let src = { src_id: 0, src_url: '', src_type: '' };
-          src.src_id = source.src_id;
-          src.src_url = source.src_url;
-          src.src_type = source.src_type;
-          incident.src.push(src);
-        }
-      });
-
-      responseArray.push(incident);
-    });
-    res.json(responseArray);
-  } catch (e) {
-    res.status(500).json({ message: 'Request Error', error: e });
-  }
-});
+}); //end showallincidents
 
 /**
  * @swagger
@@ -150,7 +124,7 @@ router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
         res.status(500).json({ message: 'Error creating Record' });
       });
   });
-});
+}); //end createIncidents
 
 // ###Sources Routes###
 /**
@@ -196,7 +170,7 @@ router.get('/sources', (req, res) => {
     .catch((err) => {
       res.status(500).json(err);
     });
-});
+}); //end sources
 
 /**
  * @swagger
@@ -498,7 +472,7 @@ router.get('/fetchfromds', (req, res) => {
       for (let i = 0; i < incidentList.length; i++) {
         await Incidents.createIncident(incidentList[i]);
       }
-    });
+    }); //end fetch from ds
 });
 
 module.exports = router;
