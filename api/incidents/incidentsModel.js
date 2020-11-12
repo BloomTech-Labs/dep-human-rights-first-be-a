@@ -6,6 +6,7 @@ module.exports = {
   getAllIncidents,
   createIncident,
   showAllIncidents,
+  checkIncidentExists,
 };
 
 async function getAllIncidents() {
@@ -33,16 +34,9 @@ async function createIncident(incident) {
       await Tags.createTags(tagList[i], incidentID[0]);
     }
   }
-  return { message: 'Success!' };
 }
 
 async function showAllIncidents(limit, offset) {
-  // return db('incidents').then(async (response) => {
-  //   if (response.length > 0) {
-  //     return db('incidents').limit(limit).offset(offset);
-  //   } else {
-  //     return [];
-  //   }
   const incidents = await db('incidents').limit(limit).offset(offset);
   for (let i = 0; i < incidents.length; i++) {
     let sources = await Sources.getSourcesByIncidentId(
@@ -55,4 +49,15 @@ async function showAllIncidents(limit, offset) {
     incidents[i]['categories'] = tags;
   }
   return incidents;
+}
+
+async function checkIncidentExists(incident) {
+  return db('incidents as i')
+    .where('i.city', incident.city)
+    .where('i.state', incident.state)
+    .where('i.lat', incident.lat)
+    .where('i.long', incident.long)
+    .where('i.title', incident.title)
+    .where('i.desc', incident.desc)
+    .where('i.date', incident.date);
 }
