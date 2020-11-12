@@ -420,7 +420,7 @@ router.get('/fetchfromds', (req, res) => {
     })
     .finally(async () => {
       incidents.forEach((incident) => {
-        if (incident.city != null) {
+        if (incident.city !== null) {
           let sources = incident.src;
           incident.src = [];
 
