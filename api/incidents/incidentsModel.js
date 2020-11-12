@@ -37,8 +37,38 @@ async function createIncident(incident) {
 }
 
 async function showAllIncidents(limit, offset) {
-  return db('incidents').limit(limit);
-  // const sources = await Sources.getAllSources().limit(limit).offset(offset);
-  // const tofTypes = await Tags.getAllTags().limit(limit).offset(offset);
-  // const responseArray = [];
+  return db('incidents').then(async (response) => {
+    if (response.length > 0) {
+      return db('incidents as i')
+        .join('incident_sources as iss', 'iss.incident_id', 'i.incident_id')
+        .join('sources as s', 's.src_id', 'iss.src_id')
+        .join(
+          'incident_type_of_force as itof',
+          'itof.incident_id',
+          'i.incident_id'
+        )
+        .join(
+          'type_of_force as tof',
+          'tof.type_of_force_id',
+          'itof.type_of_force_id'
+        )
+        .select(
+          'i.incident_id',
+          'i.city',
+          'i.lat',
+          'i.long',
+          'i.desc',
+          'i.date',
+          'i.title',
+          'i.state',
+          's.src_type',
+          's.src_url',
+          'tof.type_of_force'
+        )
+        .limit(limit)
+        .offset(offset);
+    } else {
+      return [];
+    }
+  });
 }
