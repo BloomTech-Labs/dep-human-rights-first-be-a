@@ -37,38 +37,22 @@ async function createIncident(incident) {
 }
 
 async function showAllIncidents(limit, offset) {
-  return db('incidents').then(async (response) => {
-    if (response.length > 0) {
-      return db('incidents as i')
-        .join('incident_sources as iss', 'iss.incident_id', 'i.incident_id')
-        .join('sources as s', 's.src_id', 'iss.src_id')
-        .join(
-          'incident_type_of_force as itof',
-          'itof.incident_id',
-          'i.incident_id'
-        )
-        .join(
-          'type_of_force as tof',
-          'tof.type_of_force_id',
-          'itof.type_of_force_id'
-        )
-        .select(
-          'i.incident_id',
-          'i.city',
-          'i.lat',
-          'i.long',
-          'i.desc',
-          'i.date',
-          'i.title',
-          'i.state',
-          's.src_type',
-          's.src_url',
-          'tof.type_of_force'
-        )
-        .limit(limit)
-        .offset(offset);
-    } else {
-      return [];
-    }
-  });
+  // return db('incidents').then(async (response) => {
+  //   if (response.length > 0) {
+  //     return db('incidents').limit(limit).offset(offset);
+  //   } else {
+  //     return [];
+  //   }
+  const incidents = await db('incidents').limit(limit).offset(offset);
+  for (let i = 0; i < incidents.length; i++) {
+    let sources = await Sources.getSourcesByIncidentId(
+      incidents[i].incident_id
+    );
+
+    let tags = await Tags.getTagsByIncidentId(incidents[i].incident_id);
+
+    incidents[i]['src'] = sources;
+    incidents[i]['categories'] = tags;
+  }
+  return incidents;
 }
