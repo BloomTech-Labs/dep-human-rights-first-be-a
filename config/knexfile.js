@@ -9,7 +9,7 @@ module.exports = {
     seeds: { directory: '../data/seeds' },
     pool: {
       min: 2,
-      max: 100,
+      max: 10000,
     },
     useNullAsDefault: true,
   },
@@ -21,7 +21,7 @@ module.exports = {
     seeds: { directory: '../data/seeds' },
     pool: {
       min: 2,
-      max: 100,
+      max: 10000,
     },
     useNullAsDefault: true,
   },

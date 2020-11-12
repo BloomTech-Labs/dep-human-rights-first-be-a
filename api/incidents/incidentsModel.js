@@ -5,10 +5,11 @@ const Tags = require('../tags/tagsModel');
 module.exports = {
   getAllIncidents,
   createIncident,
+  showAllIncidents,
 };
 
 async function getAllIncidents() {
-  return await db('incidents');
+  return db('incidents');
 }
 
 async function createIncident(incident) {
@@ -33,4 +34,11 @@ async function createIncident(incident) {
     }
   }
   return { message: 'Success!' };
+}
+
+async function showAllIncidents(limit, offset) {
+  return db('incidents').limit(limit);
+  // const sources = await Sources.getAllSources().limit(limit).offset(offset);
+  // const tofTypes = await Tags.getAllTags().limit(limit).offset(offset);
+  // const responseArray = [];
 }
