@@ -3,6 +3,7 @@
 
 module.exports = {
   validateIncidents,
+  processSources,
 };
 
 function validateIncidents(incident) {
@@ -28,6 +29,77 @@ function validateIncidents(incident) {
     }
   }
   return true;
+}
+
+function processSources(sources) {
+  incident_src = [];
+  sources.forEach((source) => {
+    let s = { src_url: '', src_type: '' };
+    let src_type = '';
+    s.src_url = source;
+    let url = '';
+    let comps = source.split('https://www.')[1];
+    if (comps) {
+      url = comps.split('.com')[0];
+    } else {
+      let components = source.split('https://')[1];
+      if (components != undefined) {
+        let components2 = components.split('.com')[0];
+        if (components2.length > 11) {
+          let comps3 = components2.split('.org')[0];
+          if (comps3.length > 10) {
+            url = comps3.split('.')[0];
+          } else {
+            url = comps3;
+          }
+        } else {
+          url = components2;
+        }
+      }
+    }
+    switch (url) {
+      case 'youtube':
+      case 'whyy':
+      case 'youtu':
+      case 'clips':
+      case 'tuckbot':
+      case 'peertube':
+      case 'drive':
+      case 'm':
+      case 'getway':
+        src_type = 'video';
+        break;
+      case 'instagram':
+      case 'twitter':
+      case 'reddit':
+      case 'papost':
+      case 'mobile':
+      case 'nyc':
+      case 'v':
+        src_type = 'post';
+        break;
+      case 'nlg-la':
+      case 'ewscripps':
+        src_type = 'court_document';
+        break;
+      case 'i':
+      case 'ibb':
+      case 'photos':
+        src_type = 'image';
+        break;
+      case 'doverpolice':
+      case 'dsp':
+        src_type = 'police_report';
+        break;
+      default:
+        src_type = 'article';
+        break;
+    }
+    s.src_type = src_type;
+    incident_src.push(s);
+  });
+
+  return incident_src;
 }
 
 // function validateIncidents(req, res, next) {

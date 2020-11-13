@@ -431,6 +431,7 @@ router.get('/fetchfromds', (req, res) => {
           await Incidents.checkIncidentExists(incident)
             .then((check) => {
               if (check <= 0) {
+                //incident not in db
                 console.log('here');
               } else {
                 //incident exists in db
@@ -442,82 +443,6 @@ router.get('/fetchfromds', (req, res) => {
             });
         }
       }
-
-      incidents.forEach((incident) => {
-        // if (incident.city !== null) {
-        //   let sources = incident.src;
-        //   incident.src = [];
-        //   sources.forEach((source) => {
-        //     let s = { src_url: '', src_type: '' };
-        //     let src_type = '';
-        //     s.src_url = source;
-        //     let url = '';
-        //     let comps = source.split('https://www.')[1];
-        //     if (comps) {
-        //       url = comps.split('.com')[0];
-        //     } else {
-        //       let components = source.split('https://')[1];
-        //       if (components != undefined) {
-        //         let components2 = components.split('.com')[0];
-        //         if (components2.length > 11) {
-        //           let comps3 = components2.split('.org')[0];
-        //           if (comps3.length > 10) {
-        //             url = comps3.split('.')[0];
-        //           } else {
-        //             url = comps3;
-        //           }
-        //         } else {
-        //           url = components2;
-        //         }
-        //       }
-        //     }
-        //     switch (url) {
-        //       case 'youtube':
-        //       case 'whyy':
-        //       case 'youtu':
-        //       case 'clips':
-        //       case 'tuckbot':
-        //       case 'peertube':
-        //       case 'drive':
-        //       case 'm':
-        //       case 'getway':
-        //         src_type = 'video';
-        //         break;
-        //       case 'instagram':
-        //       case 'twitter':
-        //       case 'reddit':
-        //       case 'papost':
-        //       case 'mobile':
-        //       case 'nyc':
-        //       case 'v':
-        //         src_type = 'post';
-        //         break;
-        //       case 'nlg-la':
-        //       case 'ewscripps':
-        //         src_type = 'court_document';
-        //         break;
-        //       case 'i':
-        //       case 'ibb':
-        //       case 'photos':
-        //         src_type = 'image';
-        //         break;
-        //       case 'doverpolice':
-        //       case 'dsp':
-        //         src_type = 'police_report';
-        //         break;
-        //       default:
-        //         src_type = 'article';
-        //         break;
-        //     }
-        //     s.src_type = src_type;
-        //     incident.src.push(s);
-        //   });
-        //   incidentList.push(incident);
-        // }
-      });
-      // for (let i = 0; i < incidentList.length; i++) {
-      //   await Incidents.createIncident(incidentList[i]);
-      // }
     });
 }); //end fetch from ds
 

@@ -108,3 +108,14 @@ describe('createIncident', () => {
     expect(Middleware.validateIncidents(incidentsTocheck[11])).toBe(false);
   });
 });
+
+describe('processSources', () => {
+  it.only('processes source array correctly', async () => {
+    const i1 = incidentsTocheck[0];
+    const sourceP = await Middleware.processSources(i1.src);
+    expect(sourceP[0].src_url).toBe(
+      'https://www.youtube.com/watch?v=s7MM1VauRHo'
+    );
+    expect(sourceP[0].src_type).toBe('video');
+  });
+});
