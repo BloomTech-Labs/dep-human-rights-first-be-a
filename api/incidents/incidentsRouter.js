@@ -13,9 +13,9 @@ const Middleware = require('./middleware/index');
 
 /**
  * @swagger
- * /showallincidents:
+ * /showallincidents?limit=5&offset=0:
  *  get:
- *    description: root path returning all incidents in database
+ *    description: Root path returning all incidents in database. Allows for query string to specify a limit and offset on the data in order to implement pagination.
  *    tags:
  *      - incidents
  *    produces:
@@ -143,7 +143,6 @@ router.get('/showallincidents/', async (req, res) => {
 router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
   req.body.forEach((incident) => {
     Incidents.createIncident(incident)
-
       .then((success) => {
         res.status(201).json(success);
       })
