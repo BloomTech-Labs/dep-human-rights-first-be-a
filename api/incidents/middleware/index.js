@@ -1,9 +1,12 @@
 /* eslint-disable */
 // const db = require('../../../data/db-config');
 
+const Constants = require('../constants/incidentConstants');
+
 module.exports = {
   validateIncidents,
   processSources,
+  getStateAbbrev,
 };
 
 function validateIncidents(incident) {
@@ -100,6 +103,17 @@ function processSources(sources) {
   });
 
   return incident_src;
+}
+
+function getStateAbbrev(state) {
+  const states = Constants.state_abbrev;
+
+  for (let i = 0; i < states.length; i++) {
+    if (states[i][0] === state) {
+      return states[i][1];
+    }
+  }
+  return false;
 }
 
 // function validateIncidents(req, res, next) {

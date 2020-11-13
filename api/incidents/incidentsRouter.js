@@ -412,13 +412,12 @@ router.get('/tags/:incidentID', (req, res) => {
  *                  type: object
  *                  example: {"err": "Error get data from DS"}
  */
-router.get('/fetchfromds', (req, res) => {
+router.get('/fetchfromds', async (req, res) => {
   let incidents = [];
-
   axios
     .get(process.env.DS_API_URL)
     .then((response) => {
-      // incidents = response.data;
+      incidents = response.data;
       res.status(200).json(response.data);
     })
     .catch((err) => {
@@ -429,10 +428,17 @@ router.get('/fetchfromds', (req, res) => {
         let incident = incidents[i];
         if (Middleware.validateIncidents(incident)) {
           await Incidents.checkIncidentExists(incident)
-            .then((check) => {
+            .then(async (check) => {
               if (check <= 0) {
-                //incident not in db
-                console.log('here');
+                //process sources so they are in proper format
+                incident.src = Middleware.processSources(incident.src);
+                incident['state_abbrev'] = Middleware.getStateAbbrev(
+                  incident.state
+                );
+                console.log(incident);
+                return;
+                //adds incident to db
+                await Incidents.createIncident(incident);
               } else {
                 //incident exists in db
                 return;
