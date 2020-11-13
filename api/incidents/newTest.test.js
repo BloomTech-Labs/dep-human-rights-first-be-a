@@ -77,52 +77,8 @@ describe('createIncident', () => {
   });
 
   it.only('works', async () => {
-    const i = await db('incidents').limit(10);
-
-    await Incidents.checkIncidentExists(i[0]).then((res) => {
-      if (res.length > 0) {
-        console.log('in db');
-      } else {
-        console.log('no');
-      }
-    });
-
-    await Incidents.checkIncidentExists(dsIncident).then((res) => {
-      if (res.length > 0) {
-        console.log('in db');
-      } else {
-        if (dsIncident.city === null && typeof dsIncident.city !== 'string') {
-          console.log('city');
-          return 'City not valid';
-        } else if (dsIncident.state && typeof dsIncident.state !== 'string') {
-          console.log('state');
-          return 'State not valid';
-        } else if (dsIncident.lat && typeof dsIncident.lat !== 'number') {
-          console.log('lat');
-          return 'Lat not valid';
-        } else if (dsIncident.long && typeof dsIncident.long !== 'number') {
-          console.log('long', typeof dsIncident.long);
-          return 'Long not valid';
-        } else if (dsIncident.title && typeof dsIncident.title !== 'string') {
-          console.log('title');
-          return 'title not valid';
-        } else if (dsIncident.desc && typeof dsIncident.desc !== 'string') {
-          console.log('desc', typeof dsIncident.desc);
-          return 'desc not valid';
-        } else if (dsIncident.date && typeof dsIncident.date !== 'string') {
-          console.log('date', typeof dsIncident.date);
-          return 'date not valid';
-        } else if (dsIncident.src && dsIncident.src.length <= 0) {
-          console.log('src');
-          return 'src not valid';
-        } else if (dsIncident.tags && dsIncident.tags.length <= 0) {
-          console.log('tags');
-          return 'tags not valid';
-        } else {
-          console.log('valid');
-          return 'valid';
-        }
-      }
-    });
+    console.log(
+      'need to find a way to check if an object has all required keys'
+    );
   });
 });
