@@ -140,18 +140,21 @@ router.get('/showallincidents/', async (req, res) => {
  *                  type: object
  *                  example: {"message": "Error creating Record"}
  */
-router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
-  req.body.forEach((incident) => {
-    Incidents.createIncident(incident)
-      .then((success) => {
-        res.status(201).json(success);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({ message: 'Error creating Record' });
-      });
-  });
-}); //end createIncidents
+
+//Need to make middleware function specifically for one incident being added vs from a list received from DS
+
+// router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
+//   req.body.forEach((incident) => {
+//     Incidents.createIncident(incident)
+//       .then((success) => {
+//         res.status(201).json(success);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         res.status(500).json({ message: 'Error creating Record' });
+//       });
+//   });
+// }); //end createIncidents
 
 // ###Sources Routes###
 /**
@@ -266,21 +269,24 @@ router.get('/sources/:id', (req, res) => {
  *                  type: object
  *                  example: {"error": "Error creating Source"}
  */
-router.post('/createsource', Middleware.validateSource, (req, res) => {
-  //destructures request body so can be sent to the model function with the appropiate values
-  const incident_id = req.body.incident_id;
-  let src = {};
-  src.src_url = req.body.src_url;
-  src.src_type = req.body.src_type;
 
-  Sources.createSource([src], incident_id)
-    .then(() => {
-      res.status(201).json({ message: 'Success!' });
-    })
-    .catch((error) => {
-      res.status(500).json(error);
-    });
-});
+//Need to implement better validate source function
+
+// router.post('/createsource', Middleware.validateSource, (req, res) => {
+//   //destructures request body so can be sent to the model function with the appropiate values
+//   const incident_id = req.body.incident_id;
+//   let src = {};
+//   src.src_url = req.body.src_url;
+//   src.src_type = req.body.src_type;
+
+//   Sources.createSource([src], incident_id)
+//     .then(() => {
+//       res.status(201).json({ message: 'Success!' });
+//     })
+//     .catch((error) => {
+//       res.status(500).json(error);
+//     });
+// });
 
 // ###Types of Force (tags) Routes###
 /**
@@ -408,7 +414,6 @@ router.get('/tags/:incidentID', (req, res) => {
  */
 router.get('/fetchfromds', (req, res) => {
   let incidents = [];
-  let incidentList = [];
 
   axios
     .get(process.env.DS_API_URL)
@@ -422,17 +427,20 @@ router.get('/fetchfromds', (req, res) => {
     .finally(async () => {
       for (let i = 0; i < incidents.length; i++) {
         let incident = incidents[i];
-        await Incidents.checkIncidentExists(incident)
-          .then((check) => {
-            if (check <= 0) {
-              console.log('here');
-            } else {
-              console.log('already exists');
-            }
-          })
-          .catch((e) => {
-            console.log('ds catch in finally', e.message);
-          });
+        if (Middleware.validateIncidents(incident)) {
+          await Incidents.checkIncidentExists(incident)
+            .then((check) => {
+              if (check <= 0) {
+                console.log('here');
+              } else {
+                //incident exists in db
+                return;
+              }
+            })
+            .catch((e) => {
+              console.log('ds catch in finally', e.message);
+            });
+        }
       }
 
       incidents.forEach((incident) => {

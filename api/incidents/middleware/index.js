@@ -1,3 +1,4 @@
+/* eslint-disable */
 // const db = require('../../../data/db-config');
 
 module.exports = {
@@ -23,10 +24,10 @@ function validateIncidents(incident) {
       incident[incident_keys[i]] === undefined ||
       incident[incident_keys[i]] === null
     ) {
-      return 'error';
+      return false;
     }
   }
-  return 'valid';
+  return true;
 }
 
 // function validateIncidents(req, res, next) {

@@ -61,50 +61,50 @@ describe('createIncident', () => {
   //   });
 
   it('returns valid when object has all required keys and they are not null or undefined or an empty string', async () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[0])).toBe('valid');
+    expect(Middleware.validateIncidents(incidentsTocheck[0])).toBe(true);
   });
 
   it('returns error when object has src key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[1])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[1])).toBe(false);
   });
 
   it('returns error when object has state key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[2])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[2])).toBe(false);
   });
 
   it('returns error when object has city key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[3])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[3])).toBe(false);
   });
 
   it('returns error when object has desc key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[4])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[4])).toBe(false);
   });
 
   it('returns error when object has tags key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[5])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[5])).toBe(false);
   });
 
   it('returns error when object has title key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[6])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[6])).toBe(false);
   });
 
   it('returns error when object has date key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[7])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[7])).toBe(false);
   });
 
   it('returns error when object has lat key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[8])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[8])).toBe(false);
   });
 
   it('returns error when object has long key missing', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[9])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[9])).toBe(false);
   });
 
   it('returns error when object has keys but no values', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[10])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[10])).toBe(false);
   });
 
   it('returns error is object is empty of keys and values', () => {
-    expect(Middleware.validateIncidents(incidentsTocheck[11])).toBe('error');
+    expect(Middleware.validateIncidents(incidentsTocheck[11])).toBe(false);
   });
 });
