@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const paginate = require('paginate-info');
 
 // Model and util imports
 const Incidents = require('./incidentsModel');
@@ -9,15 +8,14 @@ const Sources = require('../sources/sourcesModel');
 const Tags = require('../tags/tagsModel');
 // const { post } = require('../dsService/dsRouter');
 const Middleware = require('./middleware/index');
-const { calculateLimitAndOffset } = require('paginate-info');
 
 // ###Incidents Routes###
 
 /**
  * @swagger
- * /showallincidents:
+ * /showallincidents?limit=5&offset=0:
  *  get:
- *    description: root path returning all incidents in database
+ *    description: Root path returning all incidents in database. Allows for query string to specify a limit and offset on the data in order to implement pagination.
  *    tags:
  *      - incidents
  *    produces:
@@ -34,26 +32,56 @@ const { calculateLimitAndOffset } = require('paginate-info');
  *              properties:
  *                api:
  *                  type: array
- *                  example: [{
-        "incident_id": 1,
-        "id": "wa-olympia-1",
-        "city": "Olympia",
-        "state": "Washington",
-        "lat": 47.0417,
-        "long": -122.8959,
-        "title": "Police respond to broken windows with excessive force",
-        "desc": "Footage shows a few individuals break off from a protest to smash City Hall windows. Protesters shout at vandals to stop.\n\nPolice then arrive. They arrest multiple individuals near the City Hall windows, including one individual who appeared to approach the vandals in an effort to defuse the situation.\n\nPolice fire tear gas and riot rounds at protesters during the arrests. Protesters become agitated.\n\nAfter police walk arrestee away, protesters continue to shout at police. Police respond with a second bout of tear gas and riot rounds.\n\nA racial slur can be heard shouted, although it is unsure who is shouting.",
-        "date": "2020-05-31T04:00:00.000Z",
-        "categories": [],
-        "src": [
-            {
-                "src_id": 1,
-                "incident_id": 1,
-                "src_url": "poopy",
-                "src_type": "ecks dee"
-            }
-        ]
-    }]
+ *                  example: [
+        {
+            "incident_id": 1,
+            "city": "Olympia",
+            "state": "Washington",
+            "lat": 47.037872,
+            "long": -122.900696,
+            "title": "Police respond to broken windows with excessive force",
+            "desc": "Footage shows a few individuals break off from a protest to smash City Hall windows. Protesters shout at vandals to stop.  Police then arrive. They arrest multiple individuals near the City Hall windows, including one individual who appeared to approach the vandals in an effort to defuse the situation.  Police fire tear gas and riot rounds at protesters during the arrests. Protesters become agitated.  After police walk arrestee away, protesters continue to shout at police. Police respond with a second bout of tear gas and riot rounds.  A racial slur can be heard shouted, although it is unsure who is shouting.",
+            "date": "2020-05-31T04:00:00.000Z",
+            "src": [
+                {
+                    "src_id": 1,
+                    "src_type": "video",
+                    "src_url": "https://www.youtube.com/watch?v=s7MM1VauRHo"
+                }
+            ],
+            "categories": [
+                {
+                    "type_of_force": "arrest",
+                    "type_of_force_id": 1,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "less-lethal",
+                    "type_of_force_id": 2,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "projectile",
+                    "type_of_force_id": 3,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "protester",
+                    "type_of_force_id": 4,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "shoot",
+                    "type_of_force_id": 5,
+                    "incident_id": 1
+                },
+                {
+                    "type_of_force": "tear-gas",
+                    "type_of_force_id": 6,
+                    "incident_id": 1
+                }
+            ]
+        }]
  *      500:
  *        description: Server response error
  *        content:
@@ -115,7 +143,6 @@ router.get('/showallincidents/', async (req, res) => {
 router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
   req.body.forEach((incident) => {
     Incidents.createIncident(incident)
-
       .then((success) => {
         res.status(201).json(success);
       })
@@ -386,93 +413,104 @@ router.get('/fetchfromds', (req, res) => {
   axios
     .get(process.env.DS_API_URL)
     .then((response) => {
-      incidents = response.data;
+      // incidents = response.data;
       res.status(200).json(response.data);
     })
     .catch((err) => {
       res.json(err);
     })
     .finally(async () => {
-      incidents.forEach((incident) => {
-        if (incident.city !== null) {
-          let sources = incident.src;
-          incident.src = [];
-
-          sources.forEach((source) => {
-            let s = { src_url: '', src_type: '' };
-            let src_type = '';
-            s.src_url = source;
-            let url = '';
-
-            let comps = source.split('https://www.')[1];
-            if (comps) {
-              url = comps.split('.com')[0];
+      for (let i = 0; i < incidents.length; i++) {
+        let incident = incidents[i];
+        await Incidents.checkIncidentExists(incident)
+          .then((check) => {
+            if (check <= 0) {
+              console.log('here');
             } else {
-              let components = source.split('https://')[1];
-              if (components != undefined) {
-                let components2 = components.split('.com')[0];
-                if (components2.length > 11) {
-                  let comps3 = components2.split('.org')[0];
-                  if (comps3.length > 10) {
-                    url = comps3.split('.')[0];
-                  } else {
-                    url = comps3;
-                  }
-                } else {
-                  url = components2;
-                }
-              }
+              console.log('already exists');
             }
-
-            switch (url) {
-              case 'youtube':
-              case 'whyy':
-              case 'youtu':
-              case 'clips':
-              case 'tuckbot':
-              case 'peertube':
-              case 'drive':
-              case 'm':
-              case 'getway':
-                src_type = 'video';
-                break;
-              case 'instagram':
-              case 'twitter':
-              case 'reddit':
-              case 'papost':
-              case 'mobile':
-              case 'nyc':
-              case 'v':
-                src_type = 'post';
-                break;
-              case 'nlg-la':
-              case 'ewscripps':
-                src_type = 'court_document';
-                break;
-              case 'i':
-              case 'ibb':
-              case 'photos':
-                src_type = 'image';
-                break;
-              case 'doverpolice':
-              case 'dsp':
-                src_type = 'police_report';
-                break;
-              default:
-                src_type = 'article';
-                break;
-            }
-
-            s.src_type = src_type;
-            incident.src.push(s);
+          })
+          .catch((e) => {
+            console.log('ds catch in finally', e.message);
           });
-          incidentList.push(incident);
-        }
-      });
-      for (let i = 0; i < incidentList.length; i++) {
-        await Incidents.createIncident(incidentList[i]);
       }
-    }); //end fetch from ds
-});
+
+      incidents.forEach((incident) => {
+        // if (incident.city !== null) {
+        //   let sources = incident.src;
+        //   incident.src = [];
+        //   sources.forEach((source) => {
+        //     let s = { src_url: '', src_type: '' };
+        //     let src_type = '';
+        //     s.src_url = source;
+        //     let url = '';
+        //     let comps = source.split('https://www.')[1];
+        //     if (comps) {
+        //       url = comps.split('.com')[0];
+        //     } else {
+        //       let components = source.split('https://')[1];
+        //       if (components != undefined) {
+        //         let components2 = components.split('.com')[0];
+        //         if (components2.length > 11) {
+        //           let comps3 = components2.split('.org')[0];
+        //           if (comps3.length > 10) {
+        //             url = comps3.split('.')[0];
+        //           } else {
+        //             url = comps3;
+        //           }
+        //         } else {
+        //           url = components2;
+        //         }
+        //       }
+        //     }
+        //     switch (url) {
+        //       case 'youtube':
+        //       case 'whyy':
+        //       case 'youtu':
+        //       case 'clips':
+        //       case 'tuckbot':
+        //       case 'peertube':
+        //       case 'drive':
+        //       case 'm':
+        //       case 'getway':
+        //         src_type = 'video';
+        //         break;
+        //       case 'instagram':
+        //       case 'twitter':
+        //       case 'reddit':
+        //       case 'papost':
+        //       case 'mobile':
+        //       case 'nyc':
+        //       case 'v':
+        //         src_type = 'post';
+        //         break;
+        //       case 'nlg-la':
+        //       case 'ewscripps':
+        //         src_type = 'court_document';
+        //         break;
+        //       case 'i':
+        //       case 'ibb':
+        //       case 'photos':
+        //         src_type = 'image';
+        //         break;
+        //       case 'doverpolice':
+        //       case 'dsp':
+        //         src_type = 'police_report';
+        //         break;
+        //       default:
+        //         src_type = 'article';
+        //         break;
+        //     }
+        //     s.src_type = src_type;
+        //     incident.src.push(s);
+        //   });
+        //   incidentList.push(incident);
+        // }
+      });
+      // for (let i = 0; i < incidentList.length; i++) {
+      //   await Incidents.createIncident(incidentList[i]);
+      // }
+    });
+}); //end fetch from ds
 
 module.exports = router;
