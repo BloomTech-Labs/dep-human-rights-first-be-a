@@ -435,8 +435,6 @@ router.get('/fetchfromds', async (req, res) => {
                 incident['state_abbrev'] = Middleware.getStateAbbrev(
                   incident.state
                 );
-                console.log(incident);
-                return;
                 //adds incident to db
                 await Incidents.createIncident(incident);
               } else {

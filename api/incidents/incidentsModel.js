@@ -24,6 +24,7 @@ async function createIncident(incident) {
       long: incident.long,
       desc: incident.desc,
       date: incident.date,
+      state_abbrev: incident.state_abbrev,
     };
 
     const tagList = incident.tags;
