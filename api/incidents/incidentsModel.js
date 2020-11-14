@@ -40,7 +40,7 @@ async function createIncident(incident) {
   }
 }
 
-async function showAllIncidents(limit = 10, offset = 0) {
+async function showAllIncidents(limit, offset = 0) {
   const incidents = await db('incidents').limit(limit).offset(offset);
   for (let i = 0; i < incidents.length; i++) {
     let sources = await Sources.getSourcesByIncidentId(
