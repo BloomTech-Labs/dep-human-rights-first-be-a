@@ -140,18 +140,21 @@ router.get('/showallincidents/', async (req, res) => {
  *                  type: object
  *                  example: {"message": "Error creating Record"}
  */
-router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
-  req.body.forEach((incident) => {
-    Incidents.createIncident(incident)
-      .then((success) => {
-        res.status(201).json(success);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({ message: 'Error creating Record' });
-      });
-  });
-}); //end createIncidents
+
+//Need to make middleware function specifically for one incident being added vs from a list received from DS
+
+// router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
+//   req.body.forEach((incident) => {
+//     Incidents.createIncident(incident)
+//       .then((success) => {
+//         res.status(201).json(success);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         res.status(500).json({ message: 'Error creating Record' });
+//       });
+//   });
+// }); //end createIncidents
 
 // ###Sources Routes###
 /**
@@ -266,21 +269,24 @@ router.get('/sources/:id', (req, res) => {
  *                  type: object
  *                  example: {"error": "Error creating Source"}
  */
-router.post('/createsource', Middleware.validateSource, (req, res) => {
-  //destructures request body so can be sent to the model function with the appropiate values
-  const incident_id = req.body.incident_id;
-  let src = {};
-  src.src_url = req.body.src_url;
-  src.src_type = req.body.src_type;
 
-  Sources.createSource([src], incident_id)
-    .then(() => {
-      res.status(201).json({ message: 'Success!' });
-    })
-    .catch((error) => {
-      res.status(500).json(error);
-    });
-});
+//Need to implement better validate source function
+
+// router.post('/createsource', Middleware.validateSource, (req, res) => {
+//   //destructures request body so can be sent to the model function with the appropiate values
+//   const incident_id = req.body.incident_id;
+//   let src = {};
+//   src.src_url = req.body.src_url;
+//   src.src_type = req.body.src_type;
+
+//   Sources.createSource([src], incident_id)
+//     .then(() => {
+//       res.status(201).json({ message: 'Success!' });
+//     })
+//     .catch((error) => {
+//       res.status(500).json(error);
+//     });
+// });
 
 // ###Types of Force (tags) Routes###
 /**
@@ -406,14 +412,12 @@ router.get('/tags/:incidentID', (req, res) => {
  *                  type: object
  *                  example: {"err": "Error get data from DS"}
  */
-router.get('/fetchfromds', (req, res) => {
+router.get('/fetchfromds', async (req, res) => {
   let incidents = [];
-  let incidentList = [];
-
   axios
     .get(process.env.DS_API_URL)
     .then((response) => {
-      // incidents = response.data;
+      incidents = response.data;
       res.status(200).json(response.data);
     })
     .catch((err) => {
@@ -422,94 +426,27 @@ router.get('/fetchfromds', (req, res) => {
     .finally(async () => {
       for (let i = 0; i < incidents.length; i++) {
         let incident = incidents[i];
-        await Incidents.checkIncidentExists(incident)
-          .then((check) => {
-            if (check <= 0) {
-              console.log('here');
-            } else {
-              console.log('already exists');
-            }
-          })
-          .catch((e) => {
-            console.log('ds catch in finally', e.message);
-          });
+        if (Middleware.validateIncidents(incident)) {
+          await Incidents.checkIncidentExists(incident)
+            .then(async (check) => {
+              if (check <= 0) {
+                //process sources so they are in proper format
+                incident.src = Middleware.processSources(incident.src);
+                incident['state_abbrev'] = Middleware.getStateAbbrev(
+                  incident.state
+                );
+                //adds incident to db
+                await Incidents.createIncident(incident);
+              } else {
+                //incident exists in db
+                return;
+              }
+            })
+            .catch((e) => {
+              console.log('ds catch in finally', e.message);
+            });
+        }
       }
-
-      incidents.forEach((incident) => {
-        // if (incident.city !== null) {
-        //   let sources = incident.src;
-        //   incident.src = [];
-        //   sources.forEach((source) => {
-        //     let s = { src_url: '', src_type: '' };
-        //     let src_type = '';
-        //     s.src_url = source;
-        //     let url = '';
-        //     let comps = source.split('https://www.')[1];
-        //     if (comps) {
-        //       url = comps.split('.com')[0];
-        //     } else {
-        //       let components = source.split('https://')[1];
-        //       if (components != undefined) {
-        //         let components2 = components.split('.com')[0];
-        //         if (components2.length > 11) {
-        //           let comps3 = components2.split('.org')[0];
-        //           if (comps3.length > 10) {
-        //             url = comps3.split('.')[0];
-        //           } else {
-        //             url = comps3;
-        //           }
-        //         } else {
-        //           url = components2;
-        //         }
-        //       }
-        //     }
-        //     switch (url) {
-        //       case 'youtube':
-        //       case 'whyy':
-        //       case 'youtu':
-        //       case 'clips':
-        //       case 'tuckbot':
-        //       case 'peertube':
-        //       case 'drive':
-        //       case 'm':
-        //       case 'getway':
-        //         src_type = 'video';
-        //         break;
-        //       case 'instagram':
-        //       case 'twitter':
-        //       case 'reddit':
-        //       case 'papost':
-        //       case 'mobile':
-        //       case 'nyc':
-        //       case 'v':
-        //         src_type = 'post';
-        //         break;
-        //       case 'nlg-la':
-        //       case 'ewscripps':
-        //         src_type = 'court_document';
-        //         break;
-        //       case 'i':
-        //       case 'ibb':
-        //       case 'photos':
-        //         src_type = 'image';
-        //         break;
-        //       case 'doverpolice':
-        //       case 'dsp':
-        //         src_type = 'police_report';
-        //         break;
-        //       default:
-        //         src_type = 'article';
-        //         break;
-        //     }
-        //     s.src_type = src_type;
-        //     incident.src.push(s);
-        //   });
-        //   incidentList.push(incident);
-        // }
-      });
-      // for (let i = 0; i < incidentList.length; i++) {
-      //   await Incidents.createIncident(incidentList[i]);
-      // }
     });
 }); //end fetch from ds
 

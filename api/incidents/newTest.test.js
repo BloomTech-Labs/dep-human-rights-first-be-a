@@ -3,6 +3,13 @@ const db = require('../../data/db-config');
 const Incidents = require('./incidentsModel');
 const Sources = require('../sources/sourcesModel');
 const Tags = require('../tags/tagsModel');
+const Middleware = require('../incidents/middleware/index');
+
+//test constants
+
+const testIncidents = require('./constants/testConstants');
+//only valid incident in Incidents array is at index 0
+const incidentsTocheck = testIncidents.Incidents;
 
 const incident_sample = {
   title: 'A',
@@ -12,29 +19,6 @@ const incident_sample = {
   lat: '0',
   long: '0',
   date: '1800-01-01',
-};
-
-const dsIncident = {
-  src: ['https://www.youtube.com/watch?v=s7MM1VauRHo'],
-  state: 'Oregon',
-  city: 'Portland',
-  desc:
-    'Footage shows a few individuals break off from a protest to smash City Hall windows. Protesters shout at vandals to stop.  Police then arrive. They arrest multiple individuals near the City Hall windows, including one individual who appeared to approach the vandals in an effort to defuse the situation.  Police fire tear gas and riot rounds at protesters during the arrests. Protesters become agitated.  After police walk arrestee away, protesters continue to shout at police. Police respond with a second bout of tear gas and riot rounds.  A racial slur can be heard shouted, although it is unsure who is shouting.',
-  tags: [
-    'arrest',
-    'less-lethal',
-    'projectile',
-    'protester',
-    'shoot',
-    'tear-gas',
-  ],
-  geolocation: "{'lat': '47.0378741', 'long': '-122.9006951'}",
-  title: 'Police respond to broken windows with excessive force',
-  date: '2020-05-31',
-  date_text: 'May 31st',
-  id: 'wa-olympia-1',
-  lat: 47.0378741,
-  long: -122.9006951,
 };
 
 describe('showAllIncidents', () => {
@@ -51,34 +35,95 @@ describe('showAllIncidents', () => {
       incidents[i]['src'] = sources;
       incidents[i]['categories'] = tags;
     }
-    console.log(incidents);
+    // console.log(incidents);
   });
 });
 
 describe('createIncident', () => {
-  it('returns if incident is in db already or not', async () => {
-    const i = await db('incidents').limit(10);
+  //   it('returns if incident is in db already or not', async () => {
+  //     const i = await db('incidents').limit(10);
 
-    await Incidents.checkIncidentExists(i[0]).then((res) => {
-      if (res.length > 0) {
-        console.log('in db');
-      } else {
-        console.log('no');
-      }
-    });
+  //     await Incidents.checkIncidentExists(i[0]).then((res) => {
+  //       if (res.length > 0) {
+  //         console.log('in db');
+  //       } else {
+  //         console.log('no');
+  //       }
+  //     });
 
-    await Incidents.checkIncidentExists(incident_sample).then((res) => {
-      if (res.length > 0) {
-        console.log('in db');
-      } else {
-        console.log('no');
-      }
-    });
+  //     await Incidents.checkIncidentExists(incident_sample).then((res) => {
+  //       if (res.length > 0) {
+  //         console.log('in db');
+  //       } else {
+  //         console.log('no');
+  //       }
+  //     });
+  //   });
+
+  it('returns valid when object has all required keys and they are not null or undefined or an empty string', async () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[0])).toBe(true);
   });
 
-  it.only('works', async () => {
-    console.log(
-      'need to find a way to check if an object has all required keys'
+  it('returns error when object has src key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[1])).toBe(false);
+  });
+
+  it('returns error when object has state key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[2])).toBe(false);
+  });
+
+  it('returns error when object has city key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[3])).toBe(false);
+  });
+
+  it('returns error when object has desc key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[4])).toBe(false);
+  });
+
+  it('returns error when object has tags key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[5])).toBe(false);
+  });
+
+  it('returns error when object has title key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[6])).toBe(false);
+  });
+
+  it('returns error when object has date key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[7])).toBe(false);
+  });
+
+  it('returns error when object has lat key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[8])).toBe(false);
+  });
+
+  it('returns error when object has long key missing', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[9])).toBe(false);
+  });
+
+  it('returns error when object has keys but no values', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[10])).toBe(false);
+  });
+
+  it('returns error is object is empty of keys and values', () => {
+    expect(Middleware.validateIncidents(incidentsTocheck[11])).toBe(false);
+  });
+});
+
+describe('processSources', () => {
+  it('processes source array correctly', async () => {
+    const i1 = incidentsTocheck[0];
+    const sourceP = Middleware.processSources(i1.src);
+    expect(sourceP[0].src_url).toBe(
+      'https://www.youtube.com/watch?v=s7MM1VauRHo'
     );
+    expect(sourceP[0].src_type).toBe('video');
+  });
+});
+
+describe('getStateAbbrev', () => {
+  it('gets state abbreviation', () => {
+    const i1 = incidentsTocheck[0];
+    const abbrev = Middleware.getStateAbbrev(i1.state);
+    expect(abbrev).toBe('OR');
   });
 });

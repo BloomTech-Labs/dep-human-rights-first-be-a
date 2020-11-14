@@ -5,6 +5,7 @@ exports.up = function (knex) {
       incidents.increments('incident_id');
       incidents.string('city').notNullable();
       incidents.string('state').notNullable();
+      incidents.string('state_abbrev').notNullable();
       incidents.float('lat').notNullable();
       incidents.float('long').notNullable();
       incidents.string('title').notNullable();

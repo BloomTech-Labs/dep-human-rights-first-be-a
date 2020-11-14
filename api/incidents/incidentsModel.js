@@ -1,6 +1,7 @@
 const db = require('../../data/db-config');
 const Sources = require('../sources/sourcesModel');
 const Tags = require('../tags/tagsModel');
+const Middleware = require('../incidents/middleware/index');
 
 module.exports = {
   getAllIncidents,
@@ -14,29 +15,32 @@ async function getAllIncidents() {
 }
 
 async function createIncident(incident) {
-  const newIncident = {
-    city: incident.city,
-    state: incident.state,
-    title: incident.title,
-    lat: incident.lat,
-    long: incident.long,
-    desc: incident.desc,
-    date: incident.date,
-  };
+  if (Middleware.validateIncidents(incident)) {
+    const newIncident = {
+      city: incident.city,
+      state: incident.state,
+      title: incident.title,
+      lat: incident.lat,
+      long: incident.long,
+      desc: incident.desc,
+      date: incident.date,
+      state_abbrev: incident.state_abbrev,
+    };
 
-  const tagList = incident.tags;
+    const tagList = incident.tags;
 
-  const incidentID = await db('incidents').insert(newIncident, 'incident_id');
-  await Sources.createSource(incident.src, incidentID[0]);
+    const incidentID = await db('incidents').insert(newIncident, 'incident_id');
+    await Sources.createSource(incident.src, incidentID[0]);
 
-  if (tagList[0] != '') {
-    for (let i = 0; i < tagList.length; i++) {
-      await Tags.createTags(tagList[i], incidentID[0]);
+    if (tagList[0] != '') {
+      for (let i = 0; i < tagList.length; i++) {
+        await Tags.createTags(tagList[i], incidentID[0]);
+      }
     }
   }
 }
 
-async function showAllIncidents(limit, offset) {
+async function showAllIncidents(limit, offset = 0) {
   const incidents = await db('incidents').limit(limit).offset(offset);
   for (let i = 0; i < incidents.length; i++) {
     let sources = await Sources.getSourcesByIncidentId(
