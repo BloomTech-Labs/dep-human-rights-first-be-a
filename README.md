@@ -118,23 +118,8 @@ List the rest of the data science features and libraries in the same format as t
 | incident_id      | Integer    | Yes      | relates to specific incident      |
 
 
-
-
-#### Example
-```javascript
-{
-    "incident_id": "Test",
-    "id": "Test",
-    "city": "test",
-    "state": "test"
-    "lat": "test"
-    "long": "test"
-    "title": "test"
-    "desc": "test"
-    "date": "test"
-}
-```
 #### Responses:
+[API Docs](https://hrf-a-api.herokuapp.com/api-docs/)
 
 >/showallincidents Will receive a **200 (OK)** response with an array of incidents if the request is successful
 

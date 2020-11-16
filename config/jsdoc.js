@@ -28,6 +28,22 @@ module.exports = {
         name: 'incidents',
         description: 'Operations for incidents',
       },
+      {
+        name: 'filter',
+        description: 'Operations for filters requested by front end',
+      },
+      {
+        name: 'sources',
+        description: 'Operations for sources',
+      },
+      {
+        name: 'type_of_force',
+        description: 'Operations for type_of_force',
+      },
+      {
+        name: 'utility',
+        description: 'Utility operations',
+      },
     ],
     externalDocs: {
       description: 'Data Science scaffold service docs',
