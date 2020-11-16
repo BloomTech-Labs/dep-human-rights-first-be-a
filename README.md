@@ -4,9 +4,11 @@ You can find the deployed project at [Human Rights First - Types of Force used t
 
 ## Backend API Contributors - Group A
 <div align="center">
+
 [Jessica Duell](https://github.com/jduell12)                                                       
 [<img src="https://ca.slack-edge.com/ESZCHB482-W012XHX0325-7d8c97aaa89d-512" width = "200" />](https://github.com/)                                           
-[ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/)               
+[ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/)    
+           
 </div>
 <br>
 <br>
