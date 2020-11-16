@@ -16,9 +16,11 @@ You can find the deployed project at [Human Rights First - Types of Force used t
 
 ## Project Overview
 
-[Trello Board](https://trello.com/b/QWXanExQ/team-c-2009)
+[Trello Board](https://trello.com/b/vUsfsVej/team-a-labs28)
 
-[Technical Architecture and Userflow](https://whimsical.com/8sQcpjw3K2XdAiM9aeMkft)
+[Technical Architecture and Userflow](https://whimsical.com/hrf-architecture-JmcmB2Q6VCU3rsLCQGrXAu)
+
+[Database Schema](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
 
 Our team is developing an interactive map that identifies instances of police use of force across the United States of America for Human Rights First, an independent advocacy and action organization.
 
@@ -26,6 +28,7 @@ Our team is developing an interactive map that identifies instances of police us
 
 - User can view incidents of police use of force and get more information on specific incidents
 - User can search map based on type of force, location, and date 
+- User can view graphs which show which type of force is used the most and the locations where incidents occur
 
 ## 1️⃣ Tech Stack
 
@@ -34,18 +37,15 @@ Our team is developing an interactive map that identifies instances of police us
 
 Why did you choose this framework?
 - Recommended to us
-- Wanted to learn an in-demand framework
+- Previous team had started on a Fast API for this product
 
 List the rest of the data science features and libraries in the same format as the framework above.
 
 - Pandas
-- scikit-learn
-- spacy
-- nltk
-- PRAW
-- Tweepy
+- 
 
-#### Data Science API deployed to AWS
+#### Data Science API deployed to AWS 
+[Deployed API](http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/#/default/update_update_get)
 
 #### [Back end](https://github.com/Lambda-School-Labs/human-rights-first-be-a) built using:
 - Postgres SQL
@@ -63,7 +63,9 @@ List the rest of the data science features and libraries in the same format as t
     helmet": ^3.23.1
     http-errors: ~1.6.3
     knex: ^0.21.6
+    knex-cleaner: ^1.3.1
     morgan: ~1.9.1
+    node-cron: ^2.0.3
     pg: ^8.2.1
     swagger-jsdoc: ^4.0.0
     swagger-ui-express: ^4.1.4
@@ -73,39 +75,50 @@ List the rest of the data science features and libraries in the same format as t
 
 | Name        | Type       | Required | Description                                          |
 | ----------- | ---------- | -------- | ---------------------------------------------------- |
-| incident_id | increments | Yes      | records the number of the entreys                    |
-| id          | String     | Yes      | gives it unque id to match from DS data              |
+| incident_id | Increments | Yes      | unique identifier                                    |
 | city        | String     | Yes      | gives the city the incident took place               |
 | state       | String     | Yes      | gives the state the incident took place              |
-| lat         | float      | Yes      | gives the latitude of the incident on the world map  |
-| long        | float      | Yes      | gives the longitude of the incident on the world map |
+| state_abbrev| String     | Yes      | state abbreviation 
+| lat         | Float      | Yes      | gives the latitude of the incident on the world map  |
+| long        | Float      | Yes      | gives the longitude of the incident on the world map |
 | title       | String     | Yes      | gives the title of the incident                      |
-| desc        | varchar    | No       | gives the description of the incident                |
-| date        | date       | No       | gives the date of the incident                       |
+| desc        | Varchar    | No       | gives the description of the incident                |
+| date        | Date       | No       | gives the date of the incident                       |
 
 ### sources table 
 
 | Name        | Type       | Required | Description                                          |
 | ----------- | ---------- | -------- | ---------------------------------------------------- |
-| src_id      | increments | Yes      | records the number of the entreys                    |
-| incident_id | integer    | No       | gives it unque id                                    |
+| src_id      | Increments | Yes      | unique identifier                                    |
 | src_url     | String     | No       | gives url of the incident                            |
 | src_type    | String     | No       | gives url type                                       |
+
+### type_of_force table
+
+| Name             | Type       | Required | Description                                    |
+| ---------------- | ---------- | -------- | ---------------------------------------------- |
+| type_of_force_id | Increments | Yes      | unique identifier                              |
+| type_of_force    | String     | Yes      | gives type of force tag                        |
+
 
 ### incident_type_of_force table 
 
 | Name             | Type       | Required | Description                                          |
 | ---------------- | ---------- | -------- | ---------------------------------------------------- |
-| itof_id          | increments | Yes      | records the number of the entreys                    |
-| type_of_force_id | integer    | Yes      | gives it unque id                                    |
-| incident_id      | integer    | Yes      | key tells it what incident it is                     |
+| itof_id          | Increments | Yes      | unique identifier                                    |
+| type_of_force_id | Integer    | Yes      | relates to specific type of force                    |
+| incident_id      | Integer    | Yes      | relates to specific incident                         |
 
-### type_of_force table 
 
-| Name             | Type       | Required | Description                                          |
-| ---------------- | ---------- | -------- | ---------------------------------------------------- |
-| type_of_force_id | increments | No       | key tells it what incident_type_of_force it is       |
-| type_of_force    | String     | No       | gives type of force tag                              |
+### incident_sources 
+| Name             | Type       | Required | Description                       |
+| ---------------- | ---------- | -------- | --------------------------------- |
+| is_id            | Increments | Yes      | unique identifier                 |
+| src_id           | Integer    | Yes      | relates to specific source        |
+| incident_id      | Integer    | Yes      | relates to specific incident      |
+
+
+
 
 #### Example
 ```javascript
