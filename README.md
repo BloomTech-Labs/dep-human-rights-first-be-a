@@ -2,11 +2,10 @@
 
 You can find the deployed project at [Human Rights First - Types of Force used throughout America by Police](https://main.d2v2y4y91pkwd.amplifyapp.com/).
 
-## Contributors
-
-|                                         [Jessica Duell](https://github.com/jduell12)                                                       
-| [<img src="https://ca.slack-edge.com/ESZCHB482-W012XHX0325-7d8c97aaa89d-512" width = "200" />](https://github.com/)                           |
-|                [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/)               
+## Backend API Contributors - Group A
+[Jessica Duell](https://github.com/jduell12)                                                       
+[<img src="https://ca.slack-edge.com/ESZCHB482-W012XHX0325-7d8c97aaa89d-512" width = "200" />](https://github.com/)                                           
+[ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/)               
 
 <br>
 <br>
