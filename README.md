@@ -30,9 +30,9 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/benjamin-witter-a8980a50/) | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/terrence-malone/) |
 
 ## Deployed Product 
-- [Front End](https://main.d2v2y4y91pkwd.amplifyapp.com/)
-- [Back End](https://hrf-a-api.herokuapp.com/)
-- [DS] (http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/)
+- [Front End](https://main.d2v2y4y91pkwd.amplifyapp.com/) https://main.d2v2y4y91pkwd.amplifyapp.com/
+- [Back End](https://hrf-a-api.herokuapp.com/) https://hrf-a-api.herokuapp.com/
+- [DS](http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/) http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/
 
 ## Project Overview
 
