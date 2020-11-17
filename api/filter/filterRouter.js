@@ -47,7 +47,10 @@ const Filter = require('./filterModel');
  *              properties:
  *                api:
  *                  type: string
- *                  example: "Request Error"
+ *                  example: {
+ *                          err: "Request error",
+ *                          message: "Could not retrieve counts of different forces from database", 
+ *                          }
  */
 router.get('/forceCounts', async (req, res) => {
   await Filter.getCountTags()
@@ -55,13 +58,10 @@ router.get('/forceCounts', async (req, res) => {
       res.status(200).json({ data });
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          error: err.message,
-          message:
-            'Could not retrieve counts of different forces from database',
-        });
+      res.status(500).json({
+        error: err.message,
+        message: 'Could not retrieve counts of different forces from database',
+      });
     });
 });
 module.exports = router;

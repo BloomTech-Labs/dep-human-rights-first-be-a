@@ -187,7 +187,8 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "err": "Request Error"
+  "err": "Request Error",
+  "message": "Could not retrieve incidents from database"
 }
 ```
 
@@ -229,7 +230,8 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-    "message": "Error creating Record"
+    "err": "Request error",
+    "message": "Error creating incident"
 }
 ```
 ---
@@ -263,11 +265,60 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "message": "Error getting Sources"
+  "err": "Request error",
+  "message": "Error getting sources"
 }
 ```
 
 ---
+
+> GET /sources/:id Will receive a **200 (OK)** response with an array of sources for the given incident id if the request is successful
+
+```javascript
+[
+  {
+    src_id: 'Test',
+    src_url: 'test',
+    src_type: 'test',
+  },
+  {
+    src_id: 'Test',
+    src_url: 'test',
+  },
+];
+```
+
+> Will receive a **500 (Internal Server Error)** response if there is an issue with grabing the data
+
+```javascript
+{
+  "err": "Request error",
+  "message": "Error getting sources"
+}
+```
+
+---
+
+> POST /createsource Will receive a **201 (Created)** response along wtih the newly created source id if successful
+
+```javascript
+  {
+    "src_id": "Test",
+  },
+
+```
+
+> Will receive a **500 (Internal Server Error)** response if there is an issue with the API server
+
+```javascript
+{
+    "err": "Request error",
+    "message": "Error creating source"
+}
+```
+
+---
+
 >GET /tags Will receive a **200 (OK)** response with an array of tags if the request is successful
 
 ```javascript
@@ -293,7 +344,8 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "err": "Error getting types of force"
+  "err": "Request error",
+  "message": "Error getting types of force"
 }
 ```
 
@@ -323,88 +375,70 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "err": "Error get Types of Force for incident id"
-}
-```
->GET /sources/:id Will receive a **200 (OK)** response with an array of sources for the given incident id if the request is successful
-
-```javascript
-[
-  {
-    "src_id": "Test",
-    "src_url": "test",
-    "src_type": "test"
-  },
-  {
-    "src_id": "Test",
-    "src_url": "test",
-  },
-];
-```
-> Will receive a **500 (Internal Server Error)** response if there is an issue with grabing the data
-
-```javascript
-{
-  "err": "Error getting sources"
+  "err": "Request error",
+  "message": "Error getting types of force for incident id"
 }
 ```
 
->POST /createsource Will receive a **201 (Created)** response along wtih the newly created source id if successful
-
-```javascript
-  {
-    "src_id": "Test",
-  },
-
-```
-
-> Will receive a **500 (Internal Server Error)** response if there is an issue with the API server
-
-```javascript
-{
-    "error": "Error creating source"
-}
-```
 ---
 
+>GET /fetchfromds Will receive a **200 (OK)** response with an array of data received from DS API
+```javascript
+  [
+    {
+      "incident_id": Test,
+      "city": Test,
+      "state": Test,
+      "lat" : Test,
+      "long": Test,
+      "title": Test,
+      "desc": Test,
+      "date": Test,
+      "categories": [Test, Test2, Test3,],
+      "src": [{"src_id": Test, "src_url": Test, "src_type": Test,}]
+    }
+  ]
+```
 
+>Will return **500 (Internal server error)** if there is a problem getting the data
+```javascript
+{
+  "err": "Request error",
+  "message": "Error data from DS API"
 
+}
+
+```
+
+---
+
+>GET /filter Will receive a **200 (OK)** response with an array of types of force with their associated count 
+```javascript
+  [
+    {
+      "count": 255,
+      "type_of_force": "Test"
+    },
+    {
+      "count": 255,
+      "type_of_force": "Test"
+    },
+  ]
+```
+
+>Will receive a **500 (Internal Server error)** response if there is an issue with the API server
+```javascript
+  {
+    "err": "Request error",
+    "message": "Could not retrieve counts of different forces from database"
+  }
+```
 ---
 # APIs
 
-## 2️⃣ Data Science API
+Backend API retrieves data from DS API using a GET request to /getdata endpoint and incorporates the data into the database. The backend API checks the incoming data and only enters in new data into the database. Duplicate incident data points are ignored. 
 
-We are sending json objects to the backend with information about instances of police use of force. This information includes location data (city, state, and geocode) and relevant details about the incident, like the type of force that was used.
-
-## 2️⃣ PRAW
-
-PRAW, The Python Reddit API Wrapper, makes it easy for users to analyze Reddit data. We used PRAW to scrape Reddit for potential instances of police of force.
-
-## 3️⃣ Tweepy
-
-Tweepy is a Python library that allows users to access the Twitter API. We used Tweepy to scan Twitter to find instances of police use of force.
-
-# 3️⃣ Environment Variables
-
-In order for the app to function correctly, the user must set up their own environment variables. There should be a .env file containing the following:
-
-OKTA_URL_ISSUER = https://auth.lambdalabs.dev/oauth2/default
-
-OKTA_CLIENT_ID = 0oalwp37fU2aV9UEG4x6
-
-DATABASE_URL = postgres://ugkakqld:oZSXjtaGFA1r1psfCfIfv1ZEJID1j4KM@raja.db.elephantsql.com:5432/ugkakqld?ssl=true
-
-# Testing
-
-No testing implemented as of October 16th, 2020. 
-
-# Installation Instructions
-
-Run 'npm install' to install all necessary dependencies. 
-
-## Other Scripts
-
-    * node server.js - must be executed from /server folder - runs local server for development 
+[DS API](http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/update)
 
 # Contributing
 

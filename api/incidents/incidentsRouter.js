@@ -91,10 +91,14 @@ const Middleware = require('./middleware/index');
  *              type: object
  *              required:
  *                -err
+ *                -message
  *              properties:
  *                err:
  *                  type: string
  *                  example: "Request Error"
+ *                message:
+ *                  type: string
+ *                  example: "Could not retrieve incidents from database"
  */
 router.get('/showallincidents/', async (req, res) => {
   await Incidents.showAllIncidents(req.query.limit, req.query.offset)
@@ -102,7 +106,10 @@ router.get('/showallincidents/', async (req, res) => {
       res.status(200).json({ incidents });
     })
     .catch((err) => {
-      res.status(500).json({ err });
+      res.status(500).json({
+        err: err.message,
+        message: 'Could not retrieve incidents from database',
+      });
     });
 }); //end showallincidents
 
@@ -135,27 +142,33 @@ router.get('/showallincidents/', async (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
+ *                -message
  *              properties:
- *                api:
- *                  type: object
- *                  example: {"message": "Error creating Record"}
+ *                err:
+ *                  type: string
+ *                  example: "Request error"
+ *                message:
+ *                  type: string
+ *                  example: "Error creating incident"
  */
 
 //Need to make middleware function specifically for one incident being added vs from a list received from DS
 
-// router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
-//   req.body.forEach((incident) => {
-//     Incidents.createIncident(incident)
-//       .then((success) => {
-//         res.status(201).json(success);
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//         res.status(500).json({ message: 'Error creating Record' });
-//       });
-//   });
-// }); //end createIncidents
+router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
+  req.body.forEach((incident) => {
+    Incidents.createIncident(incident)
+      .then((success) => {
+        res.status(201).json(success);
+      })
+      .catch((err) => {
+        console.log(err);
+        res
+          .status(500)
+          .json({ err: err.message, message: 'Error creating incident' });
+      });
+  });
+}); //end createIncidents
 
 // ###Sources Routes###
 /**
@@ -187,11 +200,15 @@ router.get('/showallincidents/', async (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
+ *                -message
  *              properties:
- *                api:
- *                  type: object
- *                  example: {"err": "Error getting Sources"}
+ *                err:
+ *                  type: string
+ *                  example: "Request error"
+ *                message:
+ *                  type: string
+ *                  example: "Error getting sources"
  */
 router.get('/sources', (req, res) => {
   Sources.getAllSources()
@@ -199,7 +216,9 @@ router.get('/sources', (req, res) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      res
+        .status(500)
+        .json({ err: err.message, message: 'Error getting sources' });
     });
 }); //end sources
 
@@ -232,11 +251,15 @@ router.get('/sources', (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
+ *                -message
  *              properties:
- *                api:
- *                  type: object
- *                  example: {"err": "Error getting Sources"}
+ *                err:
+ *                  type: string
+ *                  example: "Request error"
+ *                message:
+ *                  type: string
+ *                  example: "Error getting sources"
  */
 
 // returns all sources associated with incident ID provided
@@ -276,30 +299,37 @@ router.get('/sources/:id', (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
+ *                -message
  *              properties:
- *                api:
- *                  type: object
- *                  example: {"error": "Error creating Source"}
+ *                err:
+ *                  type: string
+ *                  example: "Request error"
+ *                message:
+ *                  type: string
+ *                  example: "Error creating source"
  */
 
 //Need to implement better validate source function
 
-// router.post('/createsource', Middleware.validateSource, (req, res) => {
-//   //destructures request body so can be sent to the model function with the appropiate values
-//   const incident_id = req.body.incident_id;
-//   let src = {};
-//   src.src_url = req.body.src_url;
-//   src.src_type = req.body.src_type;
+router.post('/createsource', (req, res) => {
+  //destructures request body so can be sent to the model function with the appropiate values
+  const incident_id = req.body.incident_id;
+  let src = {};
+  src.src_url = req.body.src_url;
+  src.src_type = req.body.src_type;
 
-//   Sources.createSource([src], incident_id)
-//     .then(() => {
-//       res.status(201).json({ message: 'Success!' });
-//     })
-//     .catch((error) => {
-//       res.status(500).json(error);
-//     });
-// });
+  Sources.createSource([src], incident_id)
+    .then(() => {
+      res.status(201).json({ message: 'Success!' });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        err: error.message,
+        message: 'Error creating source',
+      });
+    });
+});
 
 // ###Types of Force (tags) Routes###
 /**
@@ -308,7 +338,7 @@ router.get('/sources/:id', (req, res) => {
  *  get:
  *    description: Get all types of force from the database
  *    tags:
- *      - types_of_force
+ *      - type_of_force
  *    produces:
  *      - applicaiton/json
  *    responses:
@@ -323,7 +353,7 @@ router.get('/sources/:id', (req, res) => {
  *              properties:
  *                api:
  *                  type: array
- *                  example: [{type_of_force_id: 3, type_of_force: taser }]
+ *                  example: [{type_of_force_id: 3, type_of_force: taser, incident_id: 1 }]
  *      500:
  *        description: server error
  *        content:
@@ -331,11 +361,15 @@ router.get('/sources/:id', (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
+ *                -message
  *              properties:
- *                api:
- *                  type: object
- *                  example: {"err": "Error getting types of force"}
+ *                err:
+ *                  type: string
+ *                  example: "Request error"
+ *                message:
+ *                  type: string
+ *                  example: "Error getting types of force"
  */
 router.get('/tags', (req, res) => {
   Tags.getAllTags()
@@ -352,7 +386,7 @@ router.get('/tags', (req, res) => {
  *  get:
  *    description: Get all types of force for a particular incident from the database
  *    tags:
- *      - types_of_force
+ *      - type_of_force
  *    produces:
  *      - applicaiton/json
  *    responses:
@@ -376,9 +410,14 @@ router.get('/tags', (req, res) => {
  *              type: object
  *              required:
  *                -err
+ *                -message
  *              properties:
- *                  type: object
- *                  example: {"err": "Error get Types of Force for incident id"}
+ *                err:
+ *                  type: string
+ *                  example: "Request error"
+ *                message:
+ *                  type: string
+ *                  example: "Error getting types of force for incident id"
  */
 router.get('/tags/:incidentID', (req, res) => {
   Tags.getTagsByIncidentId(req.params.incidentID)
@@ -386,7 +425,10 @@ router.get('/tags/:incidentID', (req, res) => {
       res.status(200).json(response);
     })
     .catch((err) => {
-      res.status(500).json({ err: err.message });
+      res.status(500).json({
+        err: err.message,
+        message: 'Error getting types of force for incident id',
+      });
     });
 });
 
@@ -407,11 +449,37 @@ router.get('/tags/:incidentID', (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                - api
+ *                - responseArray
  *              properties:
- *                api:
- *                  type: object
- *                  example: {message: 'complete'}
+ *                responseArray:
+ *                  type: array
+ *                  example: [
+ *                    {
+ *                      "incident_id": 1,
+            "city": "Olympia",
+            "state": "Washington",
+            "lat": 47.037872,
+            "long": -122.900696,
+            "title": "Police respond to broken windows with excessive force",
+            "desc": "Footage shows a few individuals break off from a protest to smash City Hall windows. Protesters shout at vandals to stop.  Police then arrive. They arrest multiple individuals near the City Hall windows, including one individual who appeared to approach the vandals in an effort to defuse the situation.  Police fire tear gas and riot rounds at protesters during the arrests. Protesters become agitated.  After police walk arrestee away, protesters continue to shout at police. Police respond with a second bout of tear gas and riot rounds.  A racial slur can be heard shouted, although it is unsure who is shouting.",
+            "date": "2020-05-31T04:00:00.000Z",
+            "categories": [
+                "arrest",
+                "less-lethal",
+                "projectile",
+                "protester",
+                "shoot",
+                "tear-gas"
+            ],
+            "src": [
+                {
+                    "src_id": 1,
+                    "src_url": "https://www.youtube.com/watch?v=s7MM1VauRHo",
+                    "src_type": "video"
+                }
+            ]
+ *                    }
+ *                  ]
  *      500:
  *        description: server error
  *        content:
@@ -419,11 +487,15 @@ router.get('/tags/:incidentID', (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
+ *                -message
  *              properties:
- *                api:
- *                  type: object
- *                  example: {"err": "Error get data from DS"}
+ *                err:
+ *                  type: string
+ *                  example: "Request error"
+ *                message:
+ *                  type: string
+ *                  example: "Error getting data from DS API"
  */
 router.get('/fetchfromds', async (req, res) => {
   let incidents = [];
