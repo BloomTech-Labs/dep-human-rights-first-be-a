@@ -12,11 +12,15 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 ## Contributors 
 
 ## Front End
+| [Antonio Baez](https://github.com/tonomb) | [Ashley](https://github.com/ashley-bergsma) | [Maryam Mosstoufi](https://github.com/MaryamMosstoufi) | 
+| :---: | :---: | :---: |
+| [<img src="https://ca.slack-edge.com/ESZCHB482-W012HMFH8E9-31ae71ede6a6-512" width="200" />](https://github.com/tonomb) | [<img src="https://ca.slack-edge.com/ESZCHB482-W0149MPSWE8-d8db5d0bd3c6-512" width="200" />](https://github.com/ashley-bergsma) | [<img src="https://ca.slack-edge.com/ESZCHB482-W0138Q5T9AL-32b57d34cfe5-512" width="200" />](https://github.com/MaryamMosstoufi) |
+| [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/antoniomtzb/)| [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/ashleybergsma89/) |[ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/maryammosstoufi/) |
 
 ## Back End
 | [Jessica Duell](https://github.com/jduell12) |
 | :---: |                                                    
-| [<img src="https://ca.slack-edge.com/ESZCHB482-W012XHX0325-7d8c97aaa89d-512" />](https://github.com/jduell12) |                                          
+| [<img src="https://ca.slack-edge.com/ESZCHB482-W012XHX0325-7d8c97aaa89d-512" width="200" />](https://github.com/jduell12) |                                          
 | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/) |
 
 ## Data Science 
