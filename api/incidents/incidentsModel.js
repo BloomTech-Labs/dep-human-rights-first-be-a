@@ -37,6 +37,8 @@ async function createIncident(incident) {
         await Tags.createTags(tagList[i], incidentID[0]);
       }
     }
+
+    return incidentID;
   }
 }
 

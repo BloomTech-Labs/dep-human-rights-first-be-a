@@ -108,6 +108,5 @@ describe('tagsModel', () => {
 
   it('seeing results', async () => {
     const count = await Filter.getCountTags();
-    console.log(count);
   });
 });

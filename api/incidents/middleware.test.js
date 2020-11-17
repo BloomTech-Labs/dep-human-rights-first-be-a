@@ -3,7 +3,7 @@ const db = require('../../data/db-config');
 const Incidents = require('./incidentsModel');
 const Sources = require('../sources/sourcesModel');
 const Tags = require('../tags/tagsModel');
-const Middleware = require('../incidents/middleware/index');
+const Middleware = require('./middleware/index');
 
 //test constants
 
