@@ -93,9 +93,10 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 
   
 ## User Flow
-[Technical Architecture and Userflow](https://whimsical.com/hrf-architecture-JmcmB2Q6VCU3rsLCQGrXAu)
+[User Flow](https://camo.githubusercontent.com/4ec523c72040be7aaa7728f91749104654d752d55c153c720c8ba73e653bd4a4/68747470733a2f2f692e6962622e636f2f587431737738312f48756d616e2d5269676874732d46697273742d312d3235782e706e67)
 
 ## Architecture 
+[Technical Architecture](https://whimsical.com/hrf-architecture-JmcmB2Q6VCU3rsLCQGrXAu)
 
 ## Updates To Repo in Labs 28 
 [Database Schema](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
