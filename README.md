@@ -96,7 +96,67 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 [User Flow](https://camo.githubusercontent.com/4ec523c72040be7aaa7728f91749104654d752d55c153c720c8ba73e653bd4a4/68747470733a2f2f692e6962622e636f2f587431737738312f48756d616e2d5269676874732d46697273742d312d3235782e706e67)
 
 ## Architecture 
-[Technical Architecture](https://whimsical.com/hrf-architecture-JmcmB2Q6VCU3rsLCQGrXAu)
+- [Technical Architecture](https://whimsical.com/hrf-architecture-JmcmB2Q6VCU3rsLCQGrXAu)
+- File hierarchy
+  - .github/workflows folder
+    - used by previous team to implement code climate and test runs
+    - commented out since our team didn't implement code climate since it was out of date 
+  - __ tests __/routes folder 
+    - inherited from previous team which holds their tests 
+    - I implemented unit tests as well as end-to-end tests and put those files in the folders of the components they were testing 
+  - api folder
+    - app.js file is the file for the server set up
+    - server.test.js file tests all the endpoints on the main route (/incidents)
+    - dsService folder
+      - inherited from previous team so not sure what it was for
+      - looks like it was the datascience prediction files but our data science team worked on their own repo so these files weren't implemented
+    - filter folder
+      - front end wanted a route to filter the data coming from the database 
+      - created new route for the filter so if future implementations needed more filters they would have their own route to use
+      - test file contains test for the database model functions 
+    - incidents folder
+      - main route used to retrieve data for front end 
+      - constants folder
+        - incidentConstants file contains an array where you can look up the state abbreviation from the state name (used inside incidents route)
+        - testConstants is the sample incidents I used to test the database table incidents 
+      - middleware folder
+        - originally inherited from previous team which would be used as middleware on the endpoints
+        - during development ended up creating middleware functions to use inside other functions instead of endpoint middleware
+      - test file contains test for the database table incidents 
+    - index folder
+      - inherited from previous team and holds base 'Hello World' route for '/' endpoint
+    - middleware folder
+      - inherited from previous team and looks like it would be used for authentication purposes of each user 
+    - profile folder
+      - inherited from previous team and looks like it is routes for user profiles
+    - sources folder
+      - contains functions to manipulate data from the database table sources 
+      - test file contains test for the database table sources
+    - tags folder
+      - contains functions to manipulate data from the database table type_of_force
+      - test file contains test for the database table type_of_force
+  - config folder
+    - inherited from previous team
+    - jsdoc.js is the document to make changes to the overall swagger docs structure 
+  - data folder 
+    - contains the migrations, seeds and database config files
+      - seeds were inherited from previous team and weren't used 
+    - csvtojson file was trying to import a csv data file and change it to json since we were only importing the data once
+        - does work but heroku won't let you run the file in their terminal so couldn't add it to the deployed database 
+    - pdadmin folder
+      - inherited folder from previous team so not sure what it's for exactly
+      - based on the file contained inside I think it's to set up the postgres database 
+  - docker/pg
+    - inherited from previous team
+  - INSTALLATION_INSTRUCTIONS.md
+    - inherited from previous team and detail how to install and get the database up and running with postgres and docker 
+    - no changes were made to set up so should work going forward
+  - .env.sample
+    - gives a sample for how the .env file should be structured 
+    - Lambda provides the OKTA_URL_ISSUER and OKTA_CLIENT_ID for the developer
+  - docker-compose.yml
+    - file for docker to set up the postgres database properly
+    - username and password for local database access can be found in this file 
 
 ## Updates To Repo in Labs 28 
 [Database Schema](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
