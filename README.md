@@ -1,15 +1,30 @@
-# Human Rights First - Types of Force used throughout America by Police
+# Human Rights First A
 
-You can find the deployed project at [Human Rights First - Types of Force used throughout America by Police](https://main.d2v2y4y91pkwd.amplifyapp.com/).
+You can find the deployed project at [Human Rights First](https://main.d2v2y4y91pkwd.amplifyapp.com/).
 
-## Backend API Contributors - Group A
-<div align="center">
+## Description
+We partnered with Human Right First organization which is a non-profit advocacy group dedicated to ensuring justice for everyone based on the values that America was founded on. Human Rights First wanted a web application that was available for anyone to be able to see where incidents that involved police using force was occurring in America and how often that was occurring.
 
-[Jessica Duell](https://github.com/jduell12)                                                       
-[<img src="https://ca.slack-edge.com/ESZCHB482-W012XHX0325-7d8c97aaa89d-512" width = "200" />](https://github.com/)                                           
-[ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/)    
+Based off of current events that labeled excessive police use of force in certain areas as outliers for the system in place. Human Rights First wanted a visual application that could show that these incidents were indeed outliers or if they were a product of a deeper rooted problem that should be addressed. 
 
-</div>
+Our team was tasked with improving visualizations of the previous codebase, making sure the data being rendered was coming from the backend API which retrieved data from the DS API and retrieving data points from multiple sources. 
+
+## Contributors 
+
+## Front End
+
+## Back End
+| [Jessica Duell](https://github.com/jduell12) |
+| :---: |                                                    
+| [<img src="https://ca.slack-edge.com/ESZCHB482-W012K5V3K43-e63794cbcf42-512" width = "200" />](https://github.com/) |                                          
+| [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/) |
+
+## Data Science 
+| [Ben Witter](https://github.com/Witterone) | [Terrence Malone](https://github.com/TerrenceAm22) |
+| :---: | :---: |
+| [<img src="https://ca.slack-edge.com/ESZCHB482-W012JQ51H19-d8d45b8f0f6b-512" width = "200"/>]() | [<img src="https://ca.slack-edge.com/ESZCHB482-W012JQ51H19-d8d45b8f0f6b-512" width = "200"/>]()|
+| [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/benjamin-witter-a8980a50/) | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/terrence-malone/) |
+
 <br>
 <br>
 
