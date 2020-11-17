@@ -514,15 +514,17 @@ router.get('/fetchfromds', async (req, res) => {
         if (Middleware.validateIncidents(incident)) {
           await Incidents.checkIncidentExists(incident)
             .then(async (check) => {
-              console.log(check.length);
               if (check.length <= 0) {
                 //process sources so they are in proper format
                 incident.src = Middleware.processSources(incident.src);
                 incident['state_abbrev'] = Middleware.getStateAbbrev(
                   incident.state
                 );
-                //adds incident to db
-                await Incidents.createIncident(incident);
+                //getStateAbbrev will return false if no matching state provided
+                if (incident.state_abbrev) {
+                  //adds incident to db
+                  await Incidents.createIncident(incident);
+                }
               } else {
                 //incident exists in db
                 return;
