@@ -29,9 +29,10 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 | [<img src="https://ca.slack-edge.com/ESZCHB482-W012K5V3K43-e63794cbcf42-512" width = "200" />](https://github.com/Witterone) | [<img src="https://ca.slack-edge.com/ESZCHB482-W012JQ51H19-d8d45b8f0f6b-512" width = "200"/>](https://github.com/TerenceAM22)|
 | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/benjamin-witter-a8980a50/) | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/terrence-malone/) |
 
-<br>
-<br>
-
+## Deployed Product 
+- [Front End](https://main.d2v2y4y91pkwd.amplifyapp.com/)
+- [Back End](https://hrf-a-api.herokuapp.com/)
+- [DS] (http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/)
 
 ## Project Overview
 
