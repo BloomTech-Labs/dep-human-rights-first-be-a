@@ -19,7 +19,7 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 ## Contributors 
 
 ## Front End
-| [Antonio Baez](https://github.com/tonomb) | [Ashley](https://github.com/ashley-bergsma) | [Maryam Mosstoufi](https://github.com/MaryamMosstoufi) | 
+| [Antonio Baez](https://github.com/tonomb) | [Ashley Bergsma](https://github.com/ashley-bergsma) | [Maryam Mosstoufi](https://github.com/MaryamMosstoufi) | 
 | :---: | :---: | :---: |
 | [<img src="https://ca.slack-edge.com/ESZCHB482-W012HMFH8E9-31ae71ede6a6-512" width="200" />](https://github.com/tonomb) | [<img src="https://ca.slack-edge.com/ESZCHB482-W0149MPSWE8-d8db5d0bd3c6-512" width="200" />](https://github.com/ashley-bergsma) | [<img src="https://ca.slack-edge.com/ESZCHB482-W0138Q5T9AL-32b57d34cfe5-512" width="200" />](https://github.com/MaryamMosstoufi) |
 | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/antoniomtzb/)| [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/ashleybergsma89/) |[ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/maryammosstoufi/) |
@@ -47,10 +47,30 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 - [DS](https://github.com/Lambda-School-Labs/human-rights-first-ds-a)
 
 ## Getting Stated - Back End 
+- We inherited a project that had been designed and implementated in a previous labs group. Their repository can be found [here](https://github.com/Lambda-School-Labs/human-rights-first-be-a/tree/730ec3207aef416d626c582c24c8c74c39890db2).
+
+- [Product Roadmap](https://www.notion.so/Human-Rights-First-Roadmap-Labs-28-4725bc357588498587902fed9d9b78c5)
+
+- There is an installation instructions file for installing all dependcies and getting docker set up
 
 
 ## Tech Stack
+- Database 
+  - postgres 
+  - knex 
 
+- API
+  - language used
+    - JavaScript
+      - express
+  - documentation
+    - swagger docs
+  - loggers
+    - helmet
+    - morgan
+  - utility 
+    - axios
+    - dotenv
 
 ### dependencies
     @okta/jwt-verifier: ^1.0.0
