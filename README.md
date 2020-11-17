@@ -16,13 +16,13 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 ## Back End
 | [Jessica Duell](https://github.com/jduell12) |
 | :---: |                                                    
-| [<img src="https://ca.slack-edge.com/ESZCHB482-W012K5V3K43-e63794cbcf42-512" width = "200" />](https://github.com/) |                                          
+| [<img src="https://ca.slack-edge.com/ESZCHB482-W012XHX0325-7d8c97aaa89d-512" />](https://github.com/jduell12) |                                          
 | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jessicaduell/) |
 
 ## Data Science 
 | [Ben Witter](https://github.com/Witterone) | [Terrence Malone](https://github.com/TerrenceAm22) |
 | :---: | :---: |
-| [<img src="https://ca.slack-edge.com/ESZCHB482-W012JQ51H19-d8d45b8f0f6b-512" width = "200"/>]() | [<img src="https://ca.slack-edge.com/ESZCHB482-W012JQ51H19-d8d45b8f0f6b-512" width = "200"/>]()|
+| [<img src="https://ca.slack-edge.com/ESZCHB482-W012K5V3K43-e63794cbcf42-512" width = "200" />](https://github.com/Witterone) | [<img src="https://ca.slack-edge.com/ESZCHB482-W012JQ51H19-d8d45b8f0f6b-512" width = "200"/>](https://github.com/TerenceAM22)|
 | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/benjamin-witter-a8980a50/) | [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/terrence-malone/) |
 
 <br>
