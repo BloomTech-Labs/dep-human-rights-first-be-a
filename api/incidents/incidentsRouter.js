@@ -37,6 +37,7 @@ const Middleware = require('./middleware/index');
             "incident_id": 1,
             "city": "Olympia",
             "state": "Washington",
+            "state_abbrev": "WA",
             "lat": 47.037872,
             "long": -122.900696,
             "title": "Police respond to broken windows with excessive force",
@@ -89,9 +90,9 @@ const Middleware = require('./middleware/index');
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
  *              properties:
- *                api:
+ *                err:
  *                  type: string
  *                  example: "Request Error"
  */
@@ -190,7 +191,7 @@ router.get('/showallincidents/', async (req, res) => {
  *              properties:
  *                api:
  *                  type: object
- *                  example: {"err": "Error get Sources"}
+ *                  example: {"err": "Error getting Sources"}
  */
 router.get('/sources', (req, res) => {
   Sources.getAllSources()
@@ -224,6 +225,18 @@ router.get('/sources', (req, res) => {
  *                api:
  *                  type: array
  *                  example: [{incident_id: 123askdj, src_url: someurl@twitter.com, src_type: 'tweet'}, {incident_id: 123askdj, src_url: someurl@reddit.com, src_type: 'news article'}]
+ *      500:
+ *        description: server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              required:
+ *                -api
+ *              properties:
+ *                api:
+ *                  type: object
+ *                  example: {"err": "Error getting Sources"}
  */
 
 // returns all sources associated with incident ID provided
@@ -322,7 +335,7 @@ router.get('/sources/:id', (req, res) => {
  *              properties:
  *                api:
  *                  type: object
- *                  example: {"err": "Error get Types of Force"}
+ *                  example: {"err": "Error getting types of force"}
  */
 router.get('/tags', (req, res) => {
   Tags.getAllTags()
@@ -335,7 +348,7 @@ router.get('/tags', (req, res) => {
 });
 /**
  * @swagger
- * /tagtypes/incidentID:
+ * /tags/:incidentID:
  *  get:
  *    description: Get all types of force for a particular incident from the database
  *    tags:
@@ -362,7 +375,7 @@ router.get('/tags', (req, res) => {
  *            schema:
  *              type: object
  *              required:
- *                -api
+ *                -err
  *              properties:
  *                  type: object
  *                  example: {"err": "Error get Types of Force for incident id"}

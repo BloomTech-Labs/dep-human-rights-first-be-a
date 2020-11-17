@@ -121,31 +121,65 @@ List the rest of the data science features and libraries in the same format as t
 #### Responses:
 [API Docs](https://hrf-a-api.herokuapp.com/api-docs/)
 
->/showallincidents Will receive a **200 (OK)** response with an array of incidents if the request is successful
+>GET /showallincidents Will receive a **200 (OK)** response with an array of incidents if the request is successful
+>GET /showallincidents?limit=5&offset=0 Will receive a **200 (OK)** response with an array of 5 incidents offset by 0 if the request is successful
 
 ```javascript
 [
   {
     "incident_id": "Test",
-    "id": "Test",
     "city": "test",
-    "state": "test"
-    "lat": "test"
-    "long": "test"
-    "title": "test"
-    "desc": "test"
-    "date": "test"
+    "state": "test",
+    "state_abbrev": "test",
+    "lat": "test",
+    "long": "test",
+    "title": "test",
+    "desc": "test",
+    "date": "test",
+    "src":[
+      { 
+        "src_id": "srcTest", 
+        "src_type": "typeTest", 
+        "src_url": "urlTest"
+        }
+    ],
+    "categories":[
+      {
+        "type_of_force": "force1", 
+        "type_of_force_id": "forceTest", 
+        "incident_id": "Test"
+      }
+    ] 
   },
-  {
-    "incident_id": "Test",
-    "id": "Test",
+    {
+    "incident_id": "Test2",
     "city": "test",
-    "state": "test"
-    "lat": "test"
-    "long": "test"
-    "title": "test"
-    "desc": "test"
-    "date": "test"
+    "state": "test",
+    "state_abbrev": "test",
+    "lat": "test",
+    "long": "test",
+    "title": "test",
+    "desc": "test",
+    "date": "test",
+    "src":[
+      { 
+        "src_id": "srcTest2", 
+        "src_type": "typeTest", 
+        "src_url": "urlTest2"
+        }
+    ],
+    "categories":[
+      {
+        "type_of_force": "force1", 
+        "type_of_force_id": "forceTest", 
+        "incident_id": "Test2"
+      }, 
+      {
+        "type_of_force": "force2", 
+        "type_of_force_id": "forceTest2", 
+        "incident_id": "Test2"
+      }, 
+    ] 
   },
 ];
 ```
@@ -153,26 +187,40 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "message": "Request Error"
+  "err": "Request Error"
 }
 ```
 
 ---
 
->/createincidents Will receive a **201 (Created)** response along wtih the newly created incident if successful
+>POST /createincidents Will receive a **201 (Created)** response along wtih the newly created incident if successful
 
 ```javascript
 [
-  {
+    {
     "incident_id": "Test",
-    "id": "Test",
     "city": "test",
-    "state": "test"
-    "lat": "test"
-    "long": "test"
-    "title": "test"
-    "desc": "test"
-    "date": "test"
+    "state": "test",
+    "state_abbrev": "test",
+    "lat": "test",
+    "long": "test",
+    "title": "test",
+    "desc": "test",
+    "date": "test",
+    "src":[
+      { 
+        "src_id": "srcTest", 
+        "src_type": "typeTest", 
+        "src_url": "urlTest"
+        }
+    ],
+    "categories":[
+      {
+        "type_of_force": "force1", 
+        "type_of_force_id": "forceTest", 
+        "incident_id": "Test"
+      }
+    ] 
   },
 ];
 ```
@@ -186,7 +234,7 @@ List the rest of the data science features and libraries in the same format as t
 ```
 ---
 
->/sources Will receive a **200 (OK)** response with an array of sources if the request is successful
+>GET /sources Will receive a **200 (OK)** response with an array of sources if the request is successful
 
 ```javascript
 [
@@ -215,29 +263,28 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "message": "Request Error"
+  "message": "Error getting Sources"
 }
 ```
 
 ---
->/tags Will receive a **200 (OK)** response with an array of tags if the request is successful
+>GET /tags Will receive a **200 (OK)** response with an array of tags if the request is successful
 
 ```javascript
 [
   {
-    "itof_id": "Test",
     "type_of_force_id": "Test",
+    "type_of_force": "Test",
     "incident_id": "test",
   },
-  {
-    "itof_id": "Test",
+    {
     "type_of_force_id": "Test",
+    "type_of_force": "Test",
     "incident_id": "test",
-
   },
-  {
-    "itof_id": "Test",
+    {
     "type_of_force_id": "Test",
+    "type_of_force": "Test",
     "incident_id": "test",
   },
 ];
@@ -246,27 +293,29 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "message": "Request Error"
+  "err": "Error getting types of force"
 }
 ```
 
 ---
->/tagtypes Will receive a **200 (OK)** response with an array of tagtypes if the request is successful
+>GET /tags/:incidentID Will receive a **200 (OK)** response with an array of types of force for the given incident id if the request is successful
 
 ```javascript
 [
   {
-    "type_of_force_id": "test"
-    "type_of_force": "test"
+    "type_of_force_id": "test",
+    "type_of_force": "test",
+    "incident_id": "test",
   },
   {
-    "type_of_force_id": "test"
-    "type_of_force": "test"
-
+    "type_of_force_id": "test",
+    "type_of_force": "test",
+    "incident_id": "test",
   },
   {
-    "type_of_force_id": "test"
-    "type_of_force": "test"
+    "type_of_force_id": "test",
+    "type_of_force": "test",
+    "incident_id": "test",
   },
 ];
 ```
@@ -274,18 +323,21 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "message": "Request Error"
+  "err": "Error get Types of Force for incident id"
 }
 ```
->/sources/:id Will receive a **200 (OK)** response with an array of tagtypes if the request is successful
+>GET /sources/:id Will receive a **200 (OK)** response with an array of sources for the given incident id if the request is successful
 
 ```javascript
 [
   {
     "src_id": "Test",
-    "incident_id": "Test",
     "src_url": "test",
     "src_type": "test"
+  },
+  {
+    "src_id": "Test",
+    "src_url": "test",
   },
 ];
 ```
@@ -293,27 +345,24 @@ List the rest of the data science features and libraries in the same format as t
 
 ```javascript
 {
-  "message": "Request Error"
+  "err": "Error getting sources"
 }
 ```
 
->/createsource Will receive a **201 (Created)** response along wtih the newly created incident if successful
+>POST /createsource Will receive a **201 (Created)** response along wtih the newly created source id if successful
 
 ```javascript
-[
+  {
     "src_id": "Test",
-    "incident_id": "Test",
-    "src_url": "test",
-    "src_type": "test"
   },
-];
+
 ```
 
 > Will receive a **500 (Internal Server Error)** response if there is an issue with the API server
 
 ```javascript
 {
-    "message": "Error creating Record"
+    "error": "Error creating source"
 }
 ```
 ---
