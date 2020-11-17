@@ -38,19 +38,13 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 
 ## Deployed Product 
 - [Front End](https://main.d2v2y4y91pkwd.amplifyapp.com/) 
-  - https://main.d2v2y4y91pkwd.amplifyapp.com/
 - [Back End](https://hrf-a-api.herokuapp.com/) 
-  - https://hrf-a-api.herokuapp.com/
 - [DS](http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/) 
-  - http://human-rights-first-ds-a.eba-yikxuxau.us-east-1.elasticbeanstalk.com/
 
 ## Project Repositories 
 - [Front End](https://github.com/Lambda-School-Labs/human-rights-first-fe-a)
-  - https://github.com/Lambda-School-Labs/human-rights-first-fe-a
 - [Back End](https://github.com/Lambda-School-Labs/human-rights-first-be-a/tree/main)
-  - https://github.com/Lambda-School-Labs/human-rights-first-be-a/
 - [DS](https://github.com/Lambda-School-Labs/human-rights-first-ds-a)
-  - https://github.com/Lambda-School-Labs/human-rights-first-ds-a
 
 ## Getting Stated - Back End 
 
@@ -78,8 +72,6 @@ Our team was tasked with improving visualizations of the previous codebase, maki
     swagger-ui-express: ^4.1.4
 
   
-
-
 ## User Flow
 [Technical Architecture and Userflow](https://whimsical.com/hrf-architecture-JmcmB2Q6VCU3rsLCQGrXAu)
 
