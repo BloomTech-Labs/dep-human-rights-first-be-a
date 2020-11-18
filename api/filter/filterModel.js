@@ -1,7 +1,4 @@
 const db = require('../../data/db-config');
-// const Incidents = require('../incidents/incidentsModel');
-// const Sources = require('../sources/sourcesModel');
-// const Tags = require('../tags/tagsModel');
 
 module.exports = {
   getCountTags,
