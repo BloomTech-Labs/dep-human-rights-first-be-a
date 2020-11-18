@@ -159,7 +159,21 @@ Our team was tasked with improving visualizations of the previous codebase, maki
     - username and password for local database access can be found in this file 
 
 ## Updates To Repo in Labs 28 
-[Database Schema](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
+- Updated database schema needed from previous implementation
+  - [Database Schema](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
+- Added unit tests for each database table implemented
+- Added end-to-end tests for incident route endpoints 
+- Added testing for duplicates of the incidents received from the DS API so duplicate incidents aren't added to the database
+- Added filter end point for front end to get the count of each type of force in the database
+  - create new filter route which could have more filters added to it in the future
+- Separated table functions (sources, tags) from one file (incidentsModel.js) into separate files and folders relating to their table 
+  - allow for cleaner, easier to read code as well as keeping the codebase modular
+- Added function to validate incidents being received from DS API to make sure they are in the proper format 
+- Implemented pagination for /showallincidents endpoint in the incidents route for front end use 
+- Implemented process sources function to make sure each source object has an appropiate source url and type before being added into the database
+- Commented out code that was implementing code climate 
+  - didn't remove in case future teams wanted to implement it
+- Updated swagger documentation for incidents route 
 
 ## End Points
 ### incidents table
