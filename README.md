@@ -177,6 +177,7 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 
 ## End Points
 ### incidents table
+* previous team did not implement foreign keys due to postgres and docker conflicts. Instead just manually added/edited/deleted the ids that connected each table which can be found [here](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
 
 | Name         | Type       | Required | Description                                          |
 | ------------ | ---------- | -------- | ---------------------------------------------------- |
@@ -548,7 +549,6 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 ```
 
 ---
-
 
 ## Issues
 
