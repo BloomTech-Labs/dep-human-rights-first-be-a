@@ -6,20 +6,9 @@ const Tags = require('../tags/tagsModel');
 const Middleware = require('./middleware/index');
 
 //test constants
-
 const testIncidents = require('./constants/testConstants');
 //only valid incident in Incidents array is at index 0
 const incidentsTocheck = testIncidents.Incidents;
-
-const incident_sample = {
-  title: 'A',
-  desc: 'A',
-  city: 'A',
-  state: 'A',
-  lat: '0',
-  long: '0',
-  date: '1800-01-01',
-};
 
 describe('showAllIncidents', () => {
   it('works', async () => {
@@ -35,31 +24,10 @@ describe('showAllIncidents', () => {
       incidents[i]['src'] = sources;
       incidents[i]['categories'] = tags;
     }
-    // console.log(incidents);
   });
 });
 
-describe('createIncident', () => {
-  //   it('returns if incident is in db already or not', async () => {
-  //     const i = await db('incidents').limit(10);
-
-  //     await Incidents.checkIncidentExists(i[0]).then((res) => {
-  //       if (res.length > 0) {
-  //         console.log('in db');
-  //       } else {
-  //         console.log('no');
-  //       }
-  //     });
-
-  //     await Incidents.checkIncidentExists(incident_sample).then((res) => {
-  //       if (res.length > 0) {
-  //         console.log('in db');
-  //       } else {
-  //         console.log('no');
-  //       }
-  //     });
-  //   });
-
+describe('validateIncidents', () => {
   it('returns valid when object has all required keys and they are not null or undefined or an empty string', async () => {
     expect(Middleware.validateIncidents(incidentsTocheck[0])).toBe(true);
   });

@@ -10,10 +10,14 @@ module.exports = {
   checkIncidentExists,
 };
 
+//returns a list of all incident objects in database
 async function getAllIncidents() {
   return db('incidents');
 }
 
+//creates new incident for database using an instance object being passed to the function
+//calls the functions to add the type of force (tag) related to the incident as well as the sources related
+//returns the id of the newly created incident object in the database
 async function createIncident(incident) {
   if (Middleware.validateIncidents(incident)) {
     const newIncident = {

@@ -122,4 +122,43 @@ describe('incidentsModel', () => {
       expect(add[0]).toEqual(4);
     });
   });
+
+  describe('checkIncidentExists(incident)', () => {
+    it('returns array holding incident object that matches in the database', async () => {
+      let incidents = getTestIncidents();
+
+      await asyncForEach(incidents, async (incident) => {
+        await db('incidents').insert(incident);
+      });
+      const i = await db('incidents');
+
+      await Incidents.checkIncidentExists(i[0]).then((res) => {
+        expect(res).toHaveLength(1);
+        expect(res).toEqual([i[0]]);
+      });
+    });
+    it('returns an empty array when no matching incident in the database', async () => {
+      let incident5 = {
+        state: 'Las Vegas',
+        city: 'Nevada',
+        desc: 'Description',
+        title: 'Police respond to broken windows with excessive force',
+        date: '2020-05-03',
+        state_abbrev: 'NV',
+        lat: 53.23,
+        long: -100.33,
+      };
+      let incidents = getTestIncidents();
+
+      await asyncForEach(incidents, async (incident) => {
+        await db('incidents').insert(incident);
+      });
+      const i = await db('incidents');
+
+      await Incidents.checkIncidentExists(incident5).then((res) => {
+        expect(res).toHaveLength(0);
+        expect(res).toEqual([]);
+      });
+    });
+  });
 });
