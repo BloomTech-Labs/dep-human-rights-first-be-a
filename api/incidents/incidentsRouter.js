@@ -155,19 +155,22 @@ router.get('/showallincidents/', async (req, res) => {
 
 //Need to make middleware function specifically for one incident being added vs from a list received from DS
 
-router.post('/createincidents', Middleware.validateIncidents, (req, res) => {
-  req.body.forEach((incident) => {
-    Incidents.createIncident(incident)
-      .then((success) => {
-        res.status(201).json(success);
-      })
-      .catch((err) => {
-        console.log(err);
-        res
-          .status(500)
-          .json({ err: err.message, message: 'Error creating incident' });
-      });
-  });
+router.post('/createincidents', (req, res) => {
+  if (req.body.length > 0) {
+    req.body.forEach((incident) => {
+      Incidents.createIncident(incident)
+        .then((success) => {
+          res.status(201).json({ message: 'Success!', incident_id: success });
+        })
+        .catch((err) => {
+          res
+            .status(500)
+            .json({ err: err.message, message: 'Error creating incident' });
+        });
+    });
+  } else {
+    res.status(500).json({ message: 'Error creating incident' });
+  }
 }); //end createIncidents
 
 // ###Sources Routes###
