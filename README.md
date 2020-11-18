@@ -18,6 +18,12 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 
 ## Contributors 
 
+## Team Project Lead
+| [Jean Fraga](https://github.com/JeanFraga) |
+| :---: |
+| [<img src="https://ca.slack-edge.com/ESZCHB482-W012X6UK3Q9-d06d593b96c0-512" width="200" />](https://github.com/JeanFraga) |
+| [ <img src="https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca" width="15"> ](https://www.linkedin.com/in/jeanfraga/) |
+
 ## Front End
 | [Antonio Baez](https://github.com/tonomb) | [Ashley Bergsma](https://github.com/ashley-bergsma) | [Maryam Mosstoufi](https://github.com/MaryamMosstoufi) | 
 | :---: | :---: | :---: |
@@ -176,8 +182,9 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 - Updated swagger documentation for incidents route 
 
 ## End Points
+- previous team did not implement foreign keys due to postgres and docker conflicts. Instead just manually added/edited/deleted the ids that connected each table which can be found [here](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
+
 ### incidents table
-* previous team did not implement foreign keys due to postgres and docker conflicts. Instead just manually added/edited/deleted the ids that connected each table which can be found [here](https://whimsical.com/human-rights-first-DZVHBA6A5pAnSE6BPUxeTR)
 
 | Name         | Type       | Required | Description                                          |
 | ------------ | ---------- | -------- | ---------------------------------------------------- |
@@ -224,7 +231,7 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 
 #### Responses:
 
-[API Docs](https://hrf-a-api.herokuapp.com/api-docs/)
+* API Docs can be found [here](https://hrf-a-api.herokuapp.com/api-docs/)
 
 > GET /showallincidents Will receive a **200 (OK)** response with an array of incidents if the request is successful
 > GET /showallincidents?limit=5&offset=0 Will receive a **200 (OK)** response with an array of 5 incidents offset by 0 if the request is successful
@@ -551,8 +558,22 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 ---
 
 ## Issues
+- Endpoints for a user to add an incident or source do not have verification middleware of the format of the incident or source object to be added. 
+  - should add this middleware to make sure that if a user enters a wrong format it can let the user know and doesn't crash the application
 
 ## Future Features
+- Add a function to pull data from DS API automatically every 24 hours or every 7 days (depending on amount of changed data in the DS API)
+  - /fetchfromds endpoint can fetch the data and add to the database already it just doesn't have a timer functionality to pull it automatically
+- Have a route for user profiles (implemented by previous group) but no table in database for user profile information
+  - if the product wants users to log in to save preferences or searches would habe to add to the current database schema for the user information
+  - need to review the previous team route/endpoints and tests to make sure they are comprehensive
+- Add more filter endpoints to filter data for front end visualizations 
 
 ## Support 
+You can reach all contributors on Lambda School's slack or through the github/linked in links above.
+- You can contact me,  Jessica Duell for backend support
+- You can contact Maryam, Antonio or Ashley regarding the front end application support 
+- You can contact Ben or Terrance for Data Science support 
+- Any questions or comments about the product as a whole or what features should be implemented contact our Team Lead (Jean Fraga)
+
 
