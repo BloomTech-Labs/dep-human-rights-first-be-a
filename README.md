@@ -571,9 +571,9 @@ Our team was tasked with improving visualizations of the previous codebase, maki
 
 ## Support 
 You can reach all contributors on Lambda School's slack or through the github/linked in links above.
-- You can contact me,  Jessica Duell for backend support
-- You can contact Maryam, Antonio or Ashley regarding the front end application support 
-- You can contact Ben or Terrance for Data Science support 
-- Any questions or comments about the product as a whole or what features should be implemented contact our Team Lead (Jean Fraga)
+- You can contact me,  [Jessica](https://www.linkedin.com/in/jessicaduell/) for backend support
+- You can contact [Maryam](https://www.linkedin.com/in/maryammosstoufi/), [Antonio](https://www.linkedin.com/in/antoniomtzb/) or [Ashley](https://www.linkedin.com/in/ashleybergsma89/) regarding the front end application support 
+- You can contact [Ben](https://www.linkedin.com/in/benjamin-witter-a8980a50/) or [Terrance](https://www.linkedin.com/in/terrence-malone/) for Data Science support 
+- Any questions or comments about the product as a whole or what features should be implemented contact our Team Lead ([Jean Fraga](https://www.linkedin.com/in/jeanfraga/))
 
 
