@@ -1,5 +1,4 @@
 /* eslint-disable */
-// const db = require('../../../data/db-config');
 
 const Constants = require('../constants/incidentConstants');
 
@@ -9,6 +8,7 @@ module.exports = {
   getStateAbbrev,
 };
 
+//checks that an incident object has a title, desc city, state, late, long, date, tags and src keys that are defined and not an empty string
 function validateIncidents(incident) {
   const incident_keys = [
     'title',
@@ -34,6 +34,7 @@ function validateIncidents(incident) {
   return true;
 }
 
+//checks the base url of a source and compares it to the probability list of type of sources and adds the appropiate source type to the source object
 function processSources(sources) {
   incident_src = [];
   sources.forEach((source) => {
@@ -105,6 +106,7 @@ function processSources(sources) {
   return incident_src;
 }
 
+//returns the state abbreviation for the state passed or false if the state doesn't match any state names in the list
 function getStateAbbrev(state) {
   const states = Constants.state_abbrev;
 
@@ -115,26 +117,3 @@ function getStateAbbrev(state) {
   }
   return false;
 }
-
-// function validateIncidents(req, res, next) {
-//   if (req.body.length > 0) {
-//     req.body = req.body.filter((incident) => {
-//       if (
-//         incident.lat &&
-//         incident.long &&
-//         incident.city &&
-//         incident.id &&
-//         incident.state &&
-//         incident.title &&
-//         incident.desc &&
-//         incident.date
-//       ) {
-//         const id = db('incidents').where('id', incident.id);
-//         if (!id[0]) return incident;
-//       }
-//     });
-//     next();
-//   } else {
-//     res.status(500).json({ message: 'Error creating Record' });
-//   }
-// }

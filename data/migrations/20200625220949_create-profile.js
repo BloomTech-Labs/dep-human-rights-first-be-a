@@ -13,13 +13,13 @@ exports.up = function (knex) {
       incidents.date('date');
     })
     .createTable('sources', (sources) => {
-      sources.increments('src_id').notNullable().unique().primary();
-      sources.string('src_url', 10000);
-      sources.string('src_type');
+      sources.increments('src_id');
+      sources.string('src_url', 10000).notNullable();
+      sources.string('src_type').notNullable();
     })
     .createTable('type_of_force', (type_of_force) => {
       type_of_force.increments('type_of_force_id');
-      type_of_force.string('type_of_force').unique();
+      type_of_force.string('type_of_force').notNullable().unique();
     })
     .createTable('incident_type_of_force', (incident_type_of_force) => {
       incident_type_of_force.increments('itof_id');

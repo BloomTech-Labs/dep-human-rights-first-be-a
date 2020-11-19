@@ -157,75 +157,73 @@ describe('server', () => {
       });
     }); //end get /showallincidents
 
-    // describe('POST /createincidents', () => {
-    //   it('returns 201 when adding a new incident', async () => {
-    //     const newIncident = {
-    //       state: 'Washington',
-    //       city: 'Seattle',
-    //       desc:
-    //         'A sheriff throws a canister of tear gas into a crowd of peaceful protesters.',
-    //       title: 'Police throw tear gas at peaceful protesters',
-    //       date: '2020-05-31',
-    //       id: 'wa-seattle-8',
-    //       lat: 47.6211,
-    //       long: -122.3244,
-    //       src: [{ src_url: 'url4', src_type: 'video' }],
-    //       tags: ['chemical', 'projectiles'],
-    //     };
+    describe('POST /createincidents', () => {
+      it('returns 201 when adding a new incident', async () => {
+        const newIncident = {
+          state: 'New York',
+          city: 'New York',
+          state_abbrev: 'NY',
+          desc: 'Some description',
+          title: 'Some title',
+          date: '2020-11-08',
+          lat: 47.6211,
+          long: -122.3244,
+          src: [{ src_url: 'url4', src_type: 'video' }],
+          tags: ['chemical', 'projectiles'],
+        };
 
-    //     let dbIncidents = await db('incidents');
-    //     expect(dbIncidents).toHaveLength(2);
+        let dbIncidents = await db('incidents');
+        expect(dbIncidents).toHaveLength(2);
 
-    //     const res = await supertest(server)
-    //       .post('/incidents/createincidents')
-    //       .send([newIncident]);
+        const res = await supertest(server)
+          .post('/incidents/createincidents')
+          .send([newIncident]);
 
-    //     dbIncidents = await db('incidents');
+        dbIncidents = await db('incidents');
 
-    //     expect(res.status).toBe(201);
-    //     expect(dbIncidents).toHaveLength(3);
-    //     expect(dbIncidents[2].desc).toEqual(newIncident.desc);
-    //   });
+        expect(res.status).toBe(201);
+        expect(dbIncidents).toHaveLength(3);
+        expect(dbIncidents[2].desc).toEqual(newIncident.desc);
+      });
 
-    //   it('returns success message when successfully adding incident', async () => {
-    //     const newIncident = {
-    //       state: 'Washington',
-    //       city: 'Seattle',
-    //       desc:
-    //         'A sheriff throws a canister of tear gas into a crowd of peaceful protesters.',
-    //       title: 'Police throw tear gas at peaceful protesters',
-    //       date: '2020-05-31',
-    //       lat: 47.6211,
-    //       long: -122.3244,
-    //       src: [{ src_url: 'url4', src_type: 'video' }],
-    //       tags: ['chemical', 'projectiles'],
-    //     };
+      it('returns success message when successfully adding incident', async () => {
+        const newIncident = {
+          state: 'New York',
+          city: 'New York',
+          state_abbrev: 'NY',
+          desc: 'Some description',
+          title: 'Some title',
+          date: '2020-11-08',
+          lat: 47.6211,
+          long: -122.3244,
+          src: [{ src_url: 'url4', src_type: 'video' }],
+          tags: ['chemical', 'projectiles'],
+        };
 
-    //     const res = await supertest(server)
-    //       .post('/incidents/createincidents')
-    //       .send([newIncident]);
+        const res = await supertest(server)
+          .post('/incidents/createincidents')
+          .send([newIncident]);
 
-    //     newIncident.incident_id = 3;
+        expect(res.body.message).toEqual('Success!');
+        expect(res.body.incident_id).toEqual([3]);
+      });
 
-    //     expect(res.body.message).toEqual('Success!');
-    //   });
+      it('returns "Error creating Record" when it can not add the record to the database', async () => {
+        const res = await supertest(server)
+          .post('/incidents/createincidents')
+          .send([]);
 
-    //   it('returns "Error creating Record" when it can not add the record to the database', async () => {
-    //     const res = await supertest(server)
-    //       .post('/incidents/createincidents')
-    //       .send();
+        expect(res.body.message).toBe('Error creating incident');
+      });
 
-    //     expect(res.body.message).toBe('Error creating Record');
-    //   });
+      it('returns 500 Error when it can not add a record to the database', async () => {
+        const res = await supertest(server)
+          .post('/incidents/createincidents')
+          .send();
 
-    //   it('returns 500 Error when it can not add a record to the database', async () => {
-    //     const res = await supertest(server)
-    //       .post('/incidents/createincidents')
-    //       .send();
-
-    //     expect(res.status).toBe(500);
-    //   });
-    // }); //end post /createincidents
+        expect(res.status).toBe(500);
+      });
+    }); //end post /createincidents
 
     describe('GET /sources', () => {
       it('returns 200 OK', async () => {
@@ -278,60 +276,58 @@ describe('server', () => {
       });
     }); //end sources/inicidentID
 
-    // describe('POST /createsource ', () => {
-    //   it('adds a source to the database', async () => {
-    //     let src = { incident_id: 2, src_url: 'url4', src_type: 'article' };
+    describe('POST /createsource ', () => {
+      it('adds a source to the database', async () => {
+        let src = { incident_id: 2, src_url: 'url4', src_type: 'article' };
 
-    //     const res = await supertest(server)
-    //       .post('/incidents/createsource')
-    //       .send(src);
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send(src);
 
-    //     expect(res.status).toBe(201);
-    //   });
+        expect(res.status).toBe(201);
+      });
 
-    //   it('returns Success message after successfully adding source to the database', async () => {
-    //     let src = {
-    //       incident_id: 2,
-    //       src_url: 'url4',
-    //       src_type: 'article',
-    //     };
+      it('returns Success message after successfully adding source to the database', async () => {
+        let src = {
+          incident_id: 2,
+          src_url: 'url4',
+          src_type: 'article',
+        };
 
-    //     const res = await supertest(server)
-    //       .post('/incidents/createsource')
-    //       .send(src);
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send(src);
 
-    //     expect(res.body.message).toBe('Success!');
-    //   });
+        expect(res.body.message).toBe('Success!');
+      });
 
-    //   it('returns 201 after adding a source to the datavase', async () => {
-    //     let src = {
-    //       incident_id: 2,
-    //       src_url: 'url4',
-    //       src_type: 'article',
-    //     };
+      it('returns 201 after adding a source to the datavase', async () => {
+        let src = {
+          incident_id: 2,
+          src_url: 'url4',
+          src_type: 'article',
+        };
 
-    //     const res = await supertest(server)
-    //       .post('/incidents/createsource')
-    //       .send(src);
-    //     expect(res.status).toBe(201);
-    //   });
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send(src);
+        expect(res.status).toBe(201);
+      });
 
-    //   it('returns message requesting source information if not provided', async () => {
-    //     const res = await supertest(server)
-    //       .post('/incidents/createsource')
-    //       .send();
-    //     expect(res.body.message).toBe(
-    //       'Missing incident id, source url or source type'
-    //     );
-    //   });
+      it('returns error message when source information is not provided', async () => {
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send();
+        expect(res.body.message).toBe('Error creating source');
+      });
 
-    //   it('returns 400 status when source information is not provided', async () => {
-    //     const res = await supertest(server)
-    //       .post('/incidents/createsource')
-    //       .send();
-    //     expect(res.status).toBe(400);
-    //   });
-    // }); //end post /createsource
+      it('returns 500 status when source information is not provided', async () => {
+        const res = await supertest(server)
+          .post('/incidents/createsource')
+          .send();
+        expect(res.status).toBe(500);
+      });
+    }); //end post /createsource
 
     describe('GET /tags', () => {
       it('sends 200 OK when retrieving tags', async () => {

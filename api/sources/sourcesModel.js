@@ -7,6 +7,7 @@ module.exports = {
   getSourcesByUrl,
 };
 
+//returns array of source obejects that is associated with the passed in incident id
 async function getSourcesByIncidentId(incident_id) {
   return await db('sources')
     .join('incident_sources as is', 'is.src_id', 'sources.src_id')
@@ -14,6 +15,7 @@ async function getSourcesByIncidentId(incident_id) {
     .select('sources.src_id', 'sources.src_type', 'sources.src_url');
 }
 
+//creates a source in the database and associates it with the given incident id
 async function createSource(sources, incidentID) {
   for (let i = 0; i < sources.length; i++) {
     let sourceURL = sources[i];
@@ -40,16 +42,19 @@ async function createSource(sources, incidentID) {
   }
 }
 
+//returns an array of all source objects found in the database
 function getAllSources() {
   return db('sources as s')
     .join('incident_sources as is', 'is.src_id', 's.src_id')
     .select('s.src_id', 's.src_url', 's.src_type', 'is.incident_id');
 }
 
+//returns a source object whose url matches the url being passed in
 async function getSourcesByUrl(src_url) {
   return db('sources').where({ src_url });
 }
 
+//adds the relationship between a particular source and a particular incident into the appropiate relationship table
 async function createIncidentSources(incidentID, srcID) {
   await db('incident_sources').insert({
     incident_id: incidentID,

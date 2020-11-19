@@ -10,10 +10,14 @@ module.exports = {
   checkIncidentExists,
 };
 
+//returns a list of all incident objects in database
 async function getAllIncidents() {
   return db('incidents');
 }
 
+//creates new incident for database using an instance object being passed to the function
+//calls the functions to add the type of force (tag) related to the incident as well as the sources related
+//returns the id of the newly created incident object in the database
 async function createIncident(incident) {
   if (Middleware.validateIncidents(incident)) {
     const newIncident = {
@@ -37,9 +41,12 @@ async function createIncident(incident) {
         await Tags.createTags(tagList[i], incidentID[0]);
       }
     }
+
+    return incidentID;
   }
 }
 
+//returns a list of all incidents including the associated sources and tags (type of force)
 async function showAllIncidents(limit, offset = 0) {
   const incidents = await db('incidents').limit(limit).offset(offset);
   for (let i = 0; i < incidents.length; i++) {
@@ -55,6 +62,7 @@ async function showAllIncidents(limit, offset = 0) {
   return incidents;
 }
 
+//returns an array of incident objects matching the incident being passed to the function
 async function checkIncidentExists(incident) {
   return db('incidents as i')
     .where('i.city', incident.city)
